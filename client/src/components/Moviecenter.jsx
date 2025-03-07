@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-// Import images explicitly
 import godzillaImage from "../images/i2.jpg";
 import godzillaBg from "../images/i22.jpg";
 import lionImage from "../images/i0.jpeg";
@@ -18,14 +17,17 @@ import titanicImage from "../images/i6.jpg";
 import titanicBg from "../images/i66.jpg";
 
 const movies = [
-  { title: "Godzilla vs Kong", imageUrl: godzillaImage, background: godzillaBg },
-  { title: "The Lion King", imageUrl: lionImage, background: lionBg },
-  { title: "Joker", imageUrl: jokerImage, background: jokerBg },
-  { title: "Mortal Kombat", imageUrl: mortalImage, background: mortalBg },
-  { title: "Vikings", imageUrl: vikingsImage, background: vikingsBg },
-  { title: "Avengers", imageUrl: avengersImage, background: avengersBg },
-  { title: "Titanic", imageUrl: titanicImage, background: titanicBg },
+  { id: 1, title: "Godzilla vs Kong", imageUrl: godzillaImage, background: godzillaBg, genre: "Action" },
+  { id: 2, title: "The Lion King", imageUrl: lionImage, background: lionBg, genre: "Animation" },
+  { id: 3, title: "Joker", imageUrl: jokerImage, background: jokerBg, genre: "Thriller" },
+  { id: 4, title: "Mortal Kombat", imageUrl: mortalImage, background: mortalBg, genre: "Action" },
+  { id: 5, title: "Vikings", imageUrl: vikingsImage, background: vikingsBg, genre: "Drama" },
+  { id: 6, title: "Avengers", imageUrl: avengersImage, background: avengersBg, genre: "Action" },
+  { id: 7, title: "Titanic", imageUrl: titanicImage, background: titanicBg, genre: "Romance" },
 ];
+
+// Duplicate movies for infinite loop
+const infiniteMovies = [...movies, ...movies, ...movies];
 
 const Moviecenter = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -52,6 +54,7 @@ const Moviecenter = () => {
 
   return (
     <>
+      {/* Custom CSS for dynamic transforms and pseudo-elements */}
       <style>
         {`
           .container {
@@ -69,15 +72,14 @@ const Moviecenter = () => {
             flex-direction: column;
             align-items: center;
             height: 100%;
-            justify-content: flex-start;
-            padding-bottom: 250px;
+            justify-content: flex-end;
+            padding-bottom: 40px;
           }
 
           .slider-container {
             position: relative;
-            bottom: 0;
             width: 100%;
-            height: 100%;
+            height: 400px; /* Increased from 300px */
             display: flex;
             align-items: center;
             overflow: hidden;
@@ -96,7 +98,6 @@ const Moviecenter = () => {
             flex: 0 0 auto;
             margin: 0 30px;
             position: relative;
-            top: 120px;
             height: 100%;
             transition: transform 0.5s ease-in-out;
             display: flex;
@@ -105,7 +106,7 @@ const Moviecenter = () => {
           }
 
           .movie-image {
-            width: 150px;
+            width: 200px; /* Increased from 150px */
             height: auto;
             object-fit: cover;
             border-radius: 8px;
@@ -114,13 +115,13 @@ const Moviecenter = () => {
           }
 
           .movie:hover .movie-image {
-            height: 250px;
+            height: 300px; /* Increased from 250px */
             opacity: 1;
           }
 
           .movie.active .movie-image {
-            height: 280px;
-            transform: scale(1.5);
+            height: 350px; /* Increased from 280px */
+            transform: scale(1.1);
             opacity: 1;
           }
 
@@ -145,7 +146,7 @@ const Moviecenter = () => {
 
           .movie-title {
             color: #fff;
-            font-size: 18px;
+            font-size: 20px; /* Increased from 18px */
           }
 
           .nav-button {
@@ -171,52 +172,21 @@ const Moviecenter = () => {
             background-color: rgba(0, 0, 0, 0.7);
           }
 
-          .booking-container {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 20;
-          }
-
-          .book-button {
-            padding: 16px 32px;
-            background-color: #ab0a10;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, opacity 0.3s ease;
-            opacity: 0;
-            display: block;
-            z-index: 20;
-            position: absolute;
-            top: 480px;
-            right: 20px;
-          }
-
-          .movie.active .book-button {
-            opacity: 1;
-          }
-
-          .book-button:hover {
-            background-color: #ab0a10;
-          }
-
           @media (max-width: 1024px) {
+            .slider-container {
+              height: 350px;
+            }
+
             .movie-image {
-              width: 120px;
+              width: 160px;
             }
 
             .movie:hover .movie-image {
-              height: 200px;
+              height: 250px;
             }
 
             .movie.active .movie-image {
-              height: 240px;
+              height: 300px;
               transform: scale(1.4);
             }
 
@@ -235,34 +205,27 @@ const Moviecenter = () => {
             .nav-button.next {
               right: 12px;
             }
-
-            .book-button {
-              padding: 14px 28px;
-            }
           }
 
           @media (max-width: 600px) {
             .slider-container {
-              height: 150vh;
-              position: relative;
-              top: 45vw;
+              height: 300px;
             }
 
             .movie {
               margin: 0 10px;
-              top: 30px;
             }
 
             .movie-image {
-              width: 80px;
+              width: 100px;
             }
 
             .movie:hover .movie-image {
-              height: 150px;
+              height: 180px;
             }
 
             .movie.active .movie-image {
-              height: 180px;
+              height: 220px;
               transform: scale(1.2);
             }
 
@@ -281,20 +244,20 @@ const Moviecenter = () => {
             .nav-button.next {
               right: 4px;
             }
-
-            .book-button {
-              padding: 10px 20px;
-            }
           }
         `}
       </style>
       <div
-        className="container"
+        className="container font-poppins"
         style={{ backgroundImage: `url(${movies[currentIndex].background})` }}
       >
         <main className="main">
           <div className="slider-container">
-            <button className="nav-button prev" onClick={handlePrevClick}>
+            <button
+              className="nav-button prev"
+              onClick={handlePrevClick}
+              aria-label="Previous Movie"
+            >
               ❮
             </button>
             <div className="slider">
@@ -306,33 +269,47 @@ const Moviecenter = () => {
                     transform: `translateX(-${currentIndex * 100}%)`,
                   }}
                   onClick={() => handleMovieClick(index)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyPress={(e) => e.key === "Enter" && handleMovieClick(index)}
                 >
-                  <img
-                    src={movie.imageUrl}
-                    alt={movie.title}
-                    className="movie-image"
-                  />
-                  <div className="black">
+                  <div className="relative text-center bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
+                    <Link
+                      to={`/booking/${encodeURIComponent(
+                        movie.title.replace(/ /g, "%20")
+                      )}`}
+                      className="block text-white no-underline"
+                    >
+                      <img
+                        src={movie.imageUrl}
+                        alt={movie.title}
+                        className={`movie-image transition-all duration-300`}
+                        loading="lazy"
+                      />
+                    </Link>
+                    {/* Updated Book Now Button */}
+                    <Link
+                      to={`/booking/${encodeURIComponent(
+                        movie.title.replace(/ /g, "%20")
+                      )}`}
+                      className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-red-800 text-white px-3 py-1 rounded-md border border-red-700 font-medium shadow-md hover:bg-red-900 hover:shadow-lg transition-all duration-300 z-10 text-sm lg:px-6 lg:py-2 md:px-5 md:py-1.5 sm:px-4 sm:py-1"
+                      aria-label={`Book ${movie.title}`}
+                      onClick={handleBookNowClick}
+                    >
+                      Book Now
+                    </Link>
                     <div className="movie-overlay">
                       <div className="movie-title">{movie.title}</div>
-                      {index === currentIndex && (
-                        <div className="booking-container">
-                          <Link to={`/booking/${movie.title}`}>
-                            <button
-                              className="book-button active"
-                              onClick={handleBookNowClick}
-                            >
-                              Book Now
-                            </button>
-                          </Link>
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-            <button className="nav-button next" onClick={handleNextClick}>
+            <button
+              className="nav-button next"
+              onClick={handleNextClick}
+              aria-label="Next Movie"
+            >
               ❯
             </button>
           </div>

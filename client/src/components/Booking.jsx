@@ -43,13 +43,25 @@ const GlobalStyle = () => (
 const Booking = () => {
   const { movieName } = useParams();
   const [selectedSeats, setSelectedSeats] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(21);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState("18:15");
   const [bookedSeats, setBookedSeats] = useState([]);
   const [error, setError] = useState("");
   const [showPayment, setShowPayment] = useState(false);
 
   const movieTitle = decodeURIComponent(movieName).replace(/%20/g, " ");
+
+  // Generate dynamic dates for the next 7 days starting from March 7, 2025
+  const getDynamicDates = () => {
+    const today = new Date("2025-03-07"); // Current date as per your context
+    const dates = [];
+    for (let i = 0; i < 7; i++) {
+      const nextDate = new Date(today);
+      nextDate.setDate(today.getDate() + i);
+      dates.push(nextDate.getDate());
+    }
+    return dates;
+  };
 
   useEffect(() => {
     const fetchBookedSeats = async () => {
@@ -117,6 +129,10 @@ const Booking = () => {
   const handlePurchase = () => {
     if (selectedSeats.length === 0) {
       setError("Please select at least one seat to proceed.");
+      return;
+    }
+    if (!selectedDate) {
+      setError("Please select a date to proceed.");
       return;
     }
     setShowPayment(true);
@@ -208,7 +224,7 @@ const Booking = () => {
         <div className="scrollable-booking flex-1 p-10 text-center bg-white/5 overflow-y-auto h-screen">
           <h3 className="text-xl font-semibold mb-6">Select Date</h3>
           <div className="flex justify-center gap-3.75 mb-6">
-            {[21, 22, 23, 24, 25, 26, 27].map((date) => (
+            {getDynamicDates().map((date) => (
               <button
                 key={date}
                 className={`bg-gray-700 text-white border-none px-5 py-2.5 rounded-full cursor-pointer font-medium transition-all ${
@@ -224,7 +240,7 @@ const Booking = () => {
           </div>
           <h3 className="text-xl font-semibold mb-6">Select Time</h3>
           <div className="flex justify-center gap-3.75 mb-6">
-            {["8:40", "11:10", "14:00", "18:15", "20:30", "23:30"].map((time) => (
+            {["8:40", "11:10", "14:00", "18:15", "20:30"].map((time) => (
               <button
                 key={time}
                 className={`bg-gray-700 text-white border-none px-5 py-2.5 rounded-full cursor-pointer font-medium transition-all ${

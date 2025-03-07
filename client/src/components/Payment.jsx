@@ -1,95 +1,21 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import { useParams } from "react-router-dom";
 
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const PopupContainer = styled.div`
-  background: #fff;
-  padding: 25px;
-  border-radius: 12px;
-  width: 320px;
-  text-align: center;
-  position: relative;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  transform: scale(${(props) => props.scale});
-  transition: transform 0.3s ease-in-out;
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: #d32f2f;
-  border: none;
-  color: #fff;
-  font-size: 22px;
-  cursor: pointer;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s ease;
-  &:hover {
-    background: #b71c1c;
-  }
-`;
-
-const Title = styled.h2`
-  margin-bottom: 15px;
-  color: #333;
-  font-family: "Arial", sans-serif;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-`;
-
-const Input = styled.input`
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  &:focus {
-    border-color: #d32f2f;
-    box-shadow: 0 0 5px rgba(211, 47, 47, 0.5);
-  }
-`;
-
-const PaymentButton = styled.button`
-  background-color: #d32f2f;
-  color: #fff;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 20px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  &:hover {
-    background-color: #b71c1c;
-    transform: scale(1.05);
-  }
-  &:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-`;
+// Custom CSS for animations and background blur
+const GlobalStyle = () => (
+  <style>
+    {`
+      .popup-scale {
+        transform: scale(${(props) => (props.processing ? 1.1 : 1)});
+        transition: transform 0.3s ease-in-out;
+      }
+      .blur-background {
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
+    `}
+  </style>
+);
 
 const Payment = ({ onClose, onPaymentSuccess }) => {
   const [paymentProcessing, setPaymentProcessing] = useState(false);
@@ -128,61 +54,77 @@ const Payment = ({ onClose, onPaymentSuccess }) => {
   };
 
   return (
-    <Overlay>
-      <PopupContainer scale={paymentProcessing ? 1.1 : 1}>
-        <CloseButton onClick={onClose}>×</CloseButton>
-        <Title>Payment</Title>
-        <p>Please enter your payment details below:</p>
-        <Form>
-          <Input
+    <div className="fixed top-0 left-0 right-0 bottom-0 bg-black/60 blur-background flex justify-center items-center z-50">
+      <div
+        className="bg-black p-6 rounded-xl w-[400px] text-center relative shadow-xl popup-scale"
+        data-processing={paymentProcessing}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-3.75 right-3.75 bg-red-700 text-white text-2xl font-bold rounded-full w-7.5 h-7.5 flex items-center justify-center hover:bg-red-900 transition-colors"
+        >
+          ×
+        </button>
+        <h2 className="text-xl font-semibold mb-3.75 text-white">Payment</h2>
+        <p className="text-sm text-gray-400 mb-5">
+          Please enter your payment details below:
+        </p>
+        <form className="flex flex-col gap-3.75">
+          <input
             type="email"
             name="email"
             placeholder="Email Address"
             value={formData.email}
             onChange={handleChange}
             required
+            className="p-3 border border-gray-600 rounded-lg text-sm outline-none bg-gray-800 text-white placeholder-gray-400 focus:border-red-700 focus:shadow-[0_0_5px_rgba(211,47,47,0.5)] transition-all"
           />
-          <Input
+          <input
             type="text"
             name="cardNumber"
             placeholder="Card Number"
             value={formData.cardNumber}
             onChange={handleChange}
             required
+            className="p-3 border border-gray-600 rounded-lg text-sm outline-none bg-gray-800 text-white placeholder-gray-400 focus:border-red-700 focus:shadow-[0_0_5px_rgba(211,47,47,0.5)] transition-all"
           />
-          <Input
+          <input
             type="text"
             name="expiryDate"
             placeholder="Expiry Date (MM/YY)"
             value={formData.expiryDate}
             onChange={handleChange}
             required
+            className="p-3 border border-gray-600 rounded-lg text-sm outline-none bg-gray-800 text-white placeholder-gray-400 focus:border-red-700 focus:shadow-[0_0_5px_rgba(211,47,47,0.5)] transition-all"
           />
-          <Input
+          <input
             type="text"
             name="cvv"
             placeholder="CVV"
             value={formData.cvv}
             onChange={handleChange}
             required
+            className="p-3 border border-gray-600 rounded-lg text-sm outline-none bg-gray-800 text-white placeholder-gray-400 focus:border-red-700 focus:shadow-[0_0_5px_rgba(211,47,47,0.5)] transition-all"
           />
-          <Input
+          <input
             type="text"
             name="nameOnCard"
             placeholder="Name on Card"
             value={formData.nameOnCard}
             onChange={handleChange}
             required
+            className="p-3 border border-gray-600 rounded-lg text-sm outline-none bg-gray-800 text-white placeholder-gray-400 focus:border-red-700 focus:shadow-[0_0_5px_rgba(211,47,47,0.5)] transition-all"
           />
-        </Form>
-        <PaymentButton
+        </form>
+        <button
           onClick={handlePayment}
           disabled={!isFormComplete || paymentProcessing}
+          className="bg-red-700 text-white px-5 py-3 rounded-lg text-base font-medium mt-5 transition-all hover:bg-red-900 hover:scale-105 disabled:bg-gray-500 disabled:cursor-not-allowed"
         >
           {paymentProcessing ? "Processing..." : "Pay Now"}
-        </PaymentButton>
-      </PopupContainer>
-    </Overlay>
+        </button>
+      </div>
+    </div>
   );
 };
 
