@@ -26,30 +26,40 @@ const movies = [
   { id: 7, title: "Titanic", imageUrl: titanicImage, background: titanicBg, genre: "Romance" },
 ];
 
-// Duplicate movies for infinite loop
-const infiniteMovies = [...movies, ...movies, ...movies];
+// Duplicate movies for infinite loop with one extra set
+const infiniteMovies = [...movies, ...movies];
 
 const Moviecenter = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(true);
 
   const handlePrevClick = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? movies.length - 1 : prevIndex - 1
-    );
+    setIsTransitioning(true);
+    setCurrentIndex((prevIndex) => prevIndex - 1);
   };
 
   const handleNextClick = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === movies.length - 1 ? 0 : prevIndex + 1
-    );
+    setIsTransitioning(true);
+    setCurrentIndex((prevIndex) => prevIndex + 1);
   };
 
   const handleMovieClick = (index) => {
+    setIsTransitioning(true);
     setCurrentIndex(index);
   };
 
   const handleBookNowClick = () => {
     // Add booking logic here if needed
+  };
+
+  const handleTransitionEnd = () => {
+    if (currentIndex >= movies.length) {
+      setIsTransitioning(false);
+      setCurrentIndex(0);
+    } else if (currentIndex < 0) {
+      setIsTransitioning(false);
+      setCurrentIndex(movies.length - 1);
+    }
   };
 
   return (
@@ -79,7 +89,7 @@ const Moviecenter = () => {
           .slider-container {
             position: relative;
             width: 100%;
-            height: 400px; /* Increased from 300px */
+            height: 400px;
             display: flex;
             align-items: center;
             overflow: hidden;
@@ -88,10 +98,8 @@ const Moviecenter = () => {
 
           .slider {
             display: flex;
-            transition: transform 0.5s ease-in-out;
             height: 100%;
-            width: calc(100% * ${movies.length});
-            flex-wrap: nowrap;
+            transition: ${isTransitioning ? 'transform 0.5s ease-in-out' : 'none'};
           }
 
           .movie {
@@ -99,14 +107,14 @@ const Moviecenter = () => {
             margin: 0 30px;
             position: relative;
             height: 100%;
-            transition: transform 0.5s ease-in-out;
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 200px;
           }
 
           .movie-image {
-            width: 200px; /* Increased from 150px */
+            width: 200px;
             height: auto;
             object-fit: cover;
             border-radius: 8px;
@@ -115,12 +123,12 @@ const Moviecenter = () => {
           }
 
           .movie:hover .movie-image {
-            height: 300px; /* Increased from 250px */
+            height: 300px;
             opacity: 1;
           }
 
           .movie.active .movie-image {
-            height: 350px; /* Increased from 280px */
+            height: 350px;
             transform: scale(1.1);
             opacity: 1;
           }
@@ -146,7 +154,7 @@ const Moviecenter = () => {
 
           .movie-title {
             color: #fff;
-            font-size: 20px; /* Increased from 18px */
+            font-size: 20px;
           }
 
           .nav-button {
@@ -177,6 +185,10 @@ const Moviecenter = () => {
               height: 350px;
             }
 
+            .movie {
+              width: 160px;
+            }
+
             .movie-image {
               width: 160px;
             }
@@ -197,14 +209,6 @@ const Moviecenter = () => {
             .nav-button {
               padding: 6px 12px;
             }
-
-            .nav-button.prev {
-              left: 12px;
-            }
-
-            .nav-button.next {
-              right: 12px;
-            }
           }
 
           @media (max-width: 600px) {
@@ -214,6 +218,7 @@ const Moviecenter = () => {
 
             .movie {
               margin: 0 10px;
+              width: 100px;
             }
 
             .movie-image {
@@ -236,20 +241,12 @@ const Moviecenter = () => {
             .nav-button {
               padding: 6px 10px;
             }
-
-            .nav-button.prev {
-              left: 4px;
-            }
-
-            .nav-button.next {
-              right: 4px;
-            }
           }
         `}
       </style>
       <div
         className="container font-poppins"
-        style={{ backgroundImage: `url(${movies[currentIndex].background})` }}
+        style={{ backgroundImage: `url(${movies[currentIndex % movies.length].background})` }}
       >
         <main className="main">
           <div className="slider-container">
@@ -260,18 +257,21 @@ const Moviecenter = () => {
             >
               ❮
             </button>
-            <div className="slider">
-              {movies.map((movie, index) => (
+            <div 
+              className="slider"
+              style={{
+                transform: `translateX(-${currentIndex * (200 + 60)}px)`,
+              }}
+              onTransitionEnd={handleTransitionEnd}
+            >
+              {infiniteMovies.map((movie, index) => (
                 <div
-                  className={`movie ${index === currentIndex ? "active" : ""}`}
+                  className={`movie ${index % movies.length === currentIndex % movies.length ? "active" : ""}`}
                   key={index}
-                  style={{
-                    transform: `translateX(-${currentIndex * 100}%)`,
-                  }}
-                  onClick={() => handleMovieClick(index)}
+                  onClick={() => handleMovieClick(index % movies.length)}
                   role="button"
                   tabIndex={0}
-                  onKeyPress={(e) => e.key === "Enter" && handleMovieClick(index)}
+                  onKeyPress={(e) => e.key === "Enter" && handleMovieClick(index % movies.length)}
                 >
                   <div className="relative text-center bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
                     <Link
@@ -287,7 +287,6 @@ const Moviecenter = () => {
                         loading="lazy"
                       />
                     </Link>
-                    {/* Updated Book Now Button */}
                     <Link
                       to={`/booking/${encodeURIComponent(
                         movie.title.replace(/ /g, "%20")
