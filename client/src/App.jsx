@@ -9,7 +9,6 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
-// Import images
 import lionImage from './images/lion.jpg';
 import vikingsImage from './images/vikings.jpg';
 import greyImage from './images/grey.jpg';
@@ -45,7 +44,6 @@ const comingSoonMovies = [
   { id: 7, title: 'Mortal Kombat', genre: 'Sci-Fi', poster: mortalImage },
 ];
 
-// Rest of your App.jsx remains the same...
 function MoviesPage() {
   const location = useLocation();
 
