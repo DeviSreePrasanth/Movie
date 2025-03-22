@@ -2,69 +2,24 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Payment from "./Payment";
-
-// Custom CSS for gradients, scrollbar, and screen arc
-const GlobalStyle = () => (
-  <style>
-    {`
-      .scrollable-booking::-webkit-scrollbar {
-        width: 8px;
-      }
-      .scrollable-booking::-webkit-scrollbar-track {
-        background: #2c2c2c;
-      }
-      .scrollable-booking::-webkit-scrollbar-thumb {
-        background: #ff4d4d;
-        border-radius: 4px;
-      }
-      .scrollable-booking::-webkit-scrollbar-thumb:hover {
-        background: #ff7878;
-      }
-      .booking-gradient {
-        background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
-      }
-      .button-gradient {
-        background: linear-gradient(90deg, #ff4d4d, #ff7878);
-      }
-      .screen-gradient {
-        background: linear-gradient(180deg, #ff4d4d, #d32f2f);
-      }
-      .underline-gradient {
-        background: linear-gradient(90deg, #ff4d4d, #ff7878);
-      }
-      .screen-arc {
-        border-radius: 0 0 150px 150px;
-        clip-path: ellipse(50% 100% at 50% 100%);
-      }
-    `}
-  </style>
-);
+import SeatSelectionPopup from "./SeatSelectionPopup";
 
 const Booking = () => {
   const { movieName } = useParams();
+  const [showPopup, setShowPopup] = useState(true);
+  const [numSeats, setNumSeats] = useState(0);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState("18:15");
+  const [selectedTime, setSelectedTime] = useState(null);
   const [bookedSeats, setBookedSeats] = useState([]);
   const [error, setError] = useState("");
   const [showPayment, setShowPayment] = useState(false);
 
   const movieTitle = decodeURIComponent(movieName).replace(/%20/g, " ");
 
-  // Generate dynamic dates for the next 7 days starting from March 7, 2025
-  const getDynamicDates = () => {
-    const today = new Date("2025-03-07"); // Current date as per your context
-    const dates = [];
-    for (let i = 0; i < 7; i++) {
-      const nextDate = new Date(today);
-      nextDate.setDate(today.getDate() + i);
-      dates.push(nextDate.getDate());
-    }
-    return dates;
-  };
-
   useEffect(() => {
     const fetchBookedSeats = async () => {
+      if (!selectedDate || !selectedTime) return;
       try {
         const response = await axios.get(
           `http://localhost:4000/api/getBookedSeats`,
@@ -76,8 +31,6 @@ const Booking = () => {
             },
           }
         );
-
-        console.log("Fetched Booked Seats:", response.data);
 
         const combinedBookedSeats = response.data.flatMap((booking) =>
           booking.seats.map((seat) => ({
@@ -96,7 +49,7 @@ const Booking = () => {
     fetchBookedSeats();
   }, [movieTitle, selectedDate, selectedTime]);
 
-  const handleSeatSelection = (row, seat) => {
+  const handleSeatSelection = (row, seat, price) => {
     if (bookedSeats.some((booked) => booked.row === row && booked.seat === seat))
       return;
 
@@ -111,7 +64,12 @@ const Booking = () => {
         )
       );
     } else {
-      setSelectedSeats([...selectedSeats, { row, seat, price: 240 }]);
+      if (selectedSeats.length >= numSeats) {
+        setError(`You can only select ${numSeats} seats.`);
+        return;
+      }
+      setSelectedSeats([...selectedSeats, { row, seat, price }]);
+      setError("");
     }
   };
 
@@ -121,8 +79,6 @@ const Booking = () => {
     setSelectedSeats(newSeats);
   };
 
-  const handleDateSelection = (date) => setSelectedDate(date);
-  const handleTimeSelection = (time) => setSelectedTime(time);
   const calculateTotalPrice = () =>
     selectedSeats.reduce((total, seat) => total + seat.price, 0);
 
@@ -131,8 +87,8 @@ const Booking = () => {
       setError("Please select at least one seat to proceed.");
       return;
     }
-    if (!selectedDate) {
-      setError("Please select a date to proceed.");
+    if (selectedSeats.length < numSeats) {
+      setError(`Please select ${numSeats} seats to proceed.`);
       return;
     }
     setShowPayment(true);
@@ -140,19 +96,14 @@ const Booking = () => {
 
   const handlePaymentSuccess = async () => {
     try {
-      const postResponse = await axios.post(
-        "http://localhost:4000/api/bookSeats",
-        {
-          movieName: movieTitle,
-          seats: selectedSeats,
-          date: selectedDate,
-          time: selectedTime,
-        }
-      );
+      await axios.post("http://localhost:4000/api/bookSeats", {
+        movieName: movieTitle,
+        seats: selectedSeats,
+        date: selectedDate,
+        time: selectedTime,
+      });
 
-      console.log("Booking Response:", postResponse.data);
-
-      const getResponse = await axios.get(
+      const response = await axios.get(
         `http://localhost:4000/api/getBookedSeats`,
         {
           params: {
@@ -163,9 +114,7 @@ const Booking = () => {
         }
       );
 
-      console.log("Updated Booked Seats:", getResponse.data);
-
-      const combinedBookedSeats = getResponse.data.flatMap((booking) =>
+      const combinedBookedSeats = response.data.flatMap((booking) =>
         booking.seats.map((seat) => ({ row: seat.row, seat: seat.seat }))
       );
 
@@ -180,150 +129,360 @@ const Booking = () => {
     }
   };
 
+  const handlePopupConfirm = ({ numSeats, date, time }) => {
+    setNumSeats(numSeats);
+    setSelectedDate(date);
+    setSelectedTime(time);
+    setShowPopup(false);
+  };
+
+  if (showPopup) {
+    return <SeatSelectionPopup onConfirm={handlePopupConfirm} movieTitle={movieTitle} />;
+  }
+
   return (
-    <>
-      <GlobalStyle />
-      <div className="min-h-screen w-screen booking-gradient text-white font-poppins flex flex-row overflow-x-hidden">
-        {/* Selected Seats Section (Sidebar) */}
-        <div className="w-[300px] relative">
-          <div className="absolute top-0 left-0 right-0 bottom-0 bg-black/75 p-7.5 flex flex-col items-center justify-start backdrop-blur-md">
-            <h2 className="text-2xl font-bold mb-2.5">{movieTitle}</h2>
-            <div className="w-15 h-1.5 underline-gradient my-2.5"></div>
-            <h3 className="text-lg font-semibold mb-6">Selected Seats</h3>
-            <div className="w-full mb-6">
-              {selectedSeats.length === 0 ? (
-                <p className="opacity-70 text-center">No seats selected yet.</p>
-              ) : (
-                selectedSeats.map((seat, index) => (
-                  <div
-                    key={`${seat.row}-${seat.seat}`}
-                    className="flex justify-between items-center p-2.5 bg-white/5 rounded-lg my-2 transition-transform hover:translate-x-1.25"
+    <div className="min-h-screen w-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white font-poppins flex flex-row overflow-x-hidden">
+      {/* Sidebar: Selected Seats */}
+      <div className="w-80 relative">
+        <div className="absolute inset-0 bg-black/75 p-6 flex flex-col items-center justify-start backdrop-blur-md">
+          <h2 className="text-2xl font-bold mb-3">{movieTitle}</h2>
+          <div className="w-70 h-1 bg-gradient-to-r from-red-500 to-red-300 my-3"></div>
+          <p className="text-sm mb-3">
+            Date: {new Date(selectedDate).toLocaleDateString("en-US", {
+              day: "numeric",
+              month: "short",
+            })}{" "}
+            | Time: {selectedTime}
+          </p>
+          <h3 className="text-lg font-semibold mb-6">
+            Selected Seats ({selectedSeats.length}/{numSeats})
+          </h3>
+          <div className="w-full mb-6">
+            {selectedSeats.length === 0 ? (
+              <p className="opacity-70 text-center">No seats selected yet.</p>
+            ) : (
+              selectedSeats.map((seat, index) => (
+                <div
+                  key={`${seat.row}-${seat.seat}`}
+                  className="flex justify-between items-center p-3 bg-white/10 rounded-lg my-2 transition-transform hover:translate-x-2"
+                >
+                  <span className="text-sm">{`Row ${seat.row} - Seat ${seat.seat} (₹${seat.price})`}</span>
+                  <button
+                    onClick={() => handleRemoveSeat(index)}
+                    className="bg-transparent border-none text-red-500 text-sm font-semibold cursor-pointer hover:text-red-400 transition-colors"
                   >
-                    <span className="text-sm">{`Row ${seat.row} - Seat ${seat.seat}`}</span>
-                    <button
-                      onClick={() => handleRemoveSeat(index)}
-                      className="bg-transparent border-none text-red-500 text-sm font-semibold cursor-pointer transition-colors hover:text-red-700"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))
-              )}
-            </div>
-            <button
-              onClick={handlePurchase}
-              className="w-[85%] p-3 button-gradient border-none rounded-6.25 text-white text-base font-semibold cursor-pointer shadow-md hover:shadow-lg transition-all hover:-translate-y-1 disabled:bg-gray-500 disabled:cursor-not-allowed disabled:shadow-none"
-            >
-              Purchase ({calculateTotalPrice()} Rs)
-            </button>
-            {error && <p className="text-red-500 font-medium mt-2.5 text-sm">{error}</p>}
+                    Remove
+                  </button>
+                </div>
+              ))
+            )}
           </div>
+          <button
+            onClick={handlePurchase}
+            className="w-4/5 py-3 bg-gradient-to-r from-red-500 to-red-300 border-none rounded-lg text-white text-base font-semibold cursor-pointer shadow-md hover:shadow-lg hover:-translate-y-1 transition-all disabled:bg-gray-500 disabled:cursor-not-allowed disabled:shadow-none"
+          >
+            Purchase (₹{calculateTotalPrice()})
+          </button>
+          {error && <p className="text-red-500 font-medium mt-3 text-sm">{error}</p>}
         </div>
-
-        {/* Booking Interface */}
-        <div className="scrollable-booking flex-1 p-10 text-center bg-white/5 overflow-y-auto h-screen">
-          <h3 className="text-xl font-semibold mb-6">Select Date</h3>
-          <div className="flex justify-center gap-3.75 mb-6">
-            {getDynamicDates().map((date) => (
-              <button
-                key={date}
-                className={`bg-gray-700 text-white border-none px-5 py-2.5 rounded-full cursor-pointer font-medium transition-all ${
-                  selectedDate === date
-                    ? "button-gradient shadow-md"
-                    : "hover:bg-gray-500"
-                }`}
-                onClick={() => handleDateSelection(date)}
-              >
-                {date} Mar
-              </button>
-            ))}
-          </div>
-          <h3 className="text-xl font-semibold mb-6">Select Time</h3>
-          <div className="flex justify-center gap-3.75 mb-6">
-            {["8:40", "11:10", "14:00", "18:15", "20:30"].map((time) => (
-              <button
-                key={time}
-                className={`bg-gray-700 text-white border-none px-5 py-2.5 rounded-full cursor-pointer font-medium transition-all ${
-                  selectedTime === time
-                    ? "button-gradient shadow-md"
-                    : "hover:bg-gray-500"
-                }`}
-                onClick={() => handleTimeSelection(time)}
-              >
-                {time}
-              </button>
-            ))}
-          </div>
-          <div className="flex flex-col items-center p-5">
-            {Array.from({ length: 6 }).map((_, rowIndex) => (
-              <div key={rowIndex} className="flex items-center mb-2.5">
-                <span className="w-10 text-white text-center font-semibold mr-2.5">
-                  {String.fromCharCode(65 + rowIndex)}
-                </span>
-                {Array.from({ length: 15 }).map((_, seatIndex) => {
-                  const isBooked = bookedSeats.some(
-                    (seat) =>
-                      seat.row === String.fromCharCode(65 + rowIndex) &&
-                      seat.seat === seatIndex + 1
-                  );
-                  const isSelected = selectedSeats.some(
-                    (seat) =>
-                      seat.row === String.fromCharCode(65 + rowIndex) &&
-                      seat.seat === seatIndex + 1
-                  );
-
-                  return (
-                    <div
-                      key={seatIndex}
-                      className={`w-8.75 h-8.75 m-1.25 flex justify-center items-center bg-gray-600 cursor-pointer rounded-lg text-sm transition-all shadow-sm ${
-                        isBooked
-                          ? "bg-gray-400 cursor-not-allowed opacity-70"
-                          : isSelected
-                          ? "bg-green-400 shadow-md"
-                          : "hover:bg-blue-300 hover:scale-110"
-                      }`}
-                      onClick={() =>
-                        !isBooked &&
-                        handleSeatSelection(
-                          String.fromCharCode(65 + rowIndex),
-                          seatIndex + 1
-                        )
-                      }
-                    >
-                      {!isBooked && !isSelected ? seatIndex + 1 : ""}
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-            <div className="screen-gradient text-white text-center w-4/5 p-3.75 mb-10 screen-arc text-2xl font-semibold shadow-lg translate-y-2.5">
-              Screen
-            </div>
-            <div className="mt-10 flex justify-center gap-5 text-sm">
-              <div className="flex items-center">
-                <div className="w-6.25 h-6.25 bg-gray-600 rounded shadow-sm"></div>
-                <span className="ml-1.25">Available</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-6.25 h-6.25 bg-gray-400 rounded shadow-sm"></div>
-                <span className="ml-1.25">Booked</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-6.25 h-6.25 bg-green-400 rounded shadow-sm"></div>
-                <span className="ml-1.25">Selected</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {showPayment && (
-          <Payment
-            onClose={() => setShowPayment(false)}
-            onPaymentSuccess={handlePaymentSuccess}
-          />
-        )}
       </div>
-    </>
+
+      {/* Theater Seating Layout */}
+      <div className="flex-1 p-10 text-center bg-white/5 overflow-y-auto h-screen scrollbar-thin scrollbar-thumb-red-500 scrollbar-track-gray-700">
+        <div className="flex justify-center">
+          {/* Seating Sections */}
+          <div className="flex-1">
+            {/* Recliners Section (Rows D-F, Farthest from Screen) */}
+            <h4 className="text-lg font-semibold mb-4 text-yellow-300">Recliners (₹299)</h4>
+            <div className="flex flex-col items-center mb-8">
+              {Array.from({ length: 3 }).map((_, rowIndex) => {
+                const rowLabel = String.fromCharCode(68 + rowIndex); // D to F
+                const seatsPerRow = rowLabel === "D" ? 26 : 24;
+                const leftSeats = Math.floor(seatsPerRow / 2);
+                const rightSeats = seatsPerRow - leftSeats;
+
+                return (
+                  <div key={rowLabel} className="flex items-center mb-4">
+                    {/* Row Label */}
+                    <span className="w-8 text-white font-semibold mr-2 flex items-center justify-center">
+                      {rowLabel}
+                    </span>
+                    {/* Left Section */}
+                    <div className="flex gap-2">
+                      {Array.from({ length: leftSeats }).map((_, seatIndex) => {
+                        const seatNumber = leftSeats - seatIndex;
+                        const isBooked = bookedSeats.some(
+                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                        );
+                        const isSelected = selectedSeats.some(
+                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                        );
+
+                        return (
+                          <div
+                            key={seatNumber}
+                            className={`w-8 h-8 flex justify-center items-center border border-gray-500 rounded-lg text-sm transition-all ${
+                              isBooked
+                                ? "bg-gray-300 cursor-not-allowed opacity-70"
+                                : isSelected
+                                ? "bg-green-500 border-green-500"
+                                : "bg-transparent cursor-pointer hover:bg-yellow-300 hover:border-yellow-300"
+                            }`}
+                            onClick={() =>
+                              !isBooked && handleSeatSelection(rowLabel, seatNumber, 299)
+                            }
+                          >
+                            {seatNumber}
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {/* Aisle (gap) */}
+                    <div className="w-6"></div>
+                    {/* Right Section */}
+                    <div className="flex gap-2">
+                      {Array.from({ length: rightSeats }).map((_, seatIndex) => {
+                        const seatNumber = seatsPerRow - seatIndex;
+                        const isBooked = bookedSeats.some(
+                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                        );
+                        const isSelected = selectedSeats.some(
+                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                        );
+
+                        return (
+                          <div
+                            key={seatNumber}
+                            className={`w-8 h-8 flex justify-center items-center border border-gray-500 rounded-lg text-sm transition-all ${
+                              isBooked
+                                ? "bg-gray-300 cursor-not-allowed opacity-70"
+                                : isSelected
+                                ? "bg-green-500 border-green-500"
+                                : "bg-transparent cursor-pointer hover:bg-yellow-300 hover:border-yellow-300"
+                            }`}
+                            onClick={() =>
+                              !isBooked && handleSeatSelection(rowLabel, seatNumber, 299)
+                            }
+                          >
+                            {seatNumber}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Premium Section (Rows G-M, Middle Section) */}
+            <h4 className="text-lg font-semibold mb-4 text-blue-300">Premium (₹199)</h4>
+            <div className="flex flex-col items-center mb-8">
+              {Array.from({ length: 7 }).map((_, rowIndex) => {
+                const rowLabel = String.fromCharCode(71 + rowIndex); // G to M
+                const seatsPerRow = 24;
+                const leftSeats = Math.floor(seatsPerRow / 2);
+                const rightSeats = seatsPerRow - leftSeats;
+
+                return (
+                  <div key={rowLabel} className="flex items-center mb-4">
+                    {/* Row Label */}
+                    <span className="w-8 text-white font-semibold mr-2 flex items-center justify-center">
+                      {rowLabel}
+                    </span>
+                    {/* Left Section */}
+                    <div className="flex gap-2">
+                      {Array.from({ length: leftSeats }).map((_, seatIndex) => {
+                        const seatNumber = leftSeats - seatIndex;
+                        const isBooked = bookedSeats.some(
+                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                        );
+                        const isSelected = selectedSeats.some(
+                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                        );
+
+                        return (
+                          <div
+                            key={seatNumber}
+                            className={`w-8 h-8 flex justify-center items-center border border-gray-500 rounded-lg text-sm transition-all ${
+                              isBooked
+                                ? "bg-gray-300 cursor-not-allowed opacity-70"
+                                : isSelected
+                                ? "bg-green-500 border-green-500"
+                                : "bg-transparent cursor-pointer hover:bg-blue-300 hover:border-blue-300"
+                            }`}
+                            onClick={() =>
+                              !isBooked && handleSeatSelection(rowLabel, seatNumber, 199)
+                            }
+                          >
+                            {seatNumber}
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {/* Aisle (gap) */}
+                    <div className="w-6"></div>
+                    {/* Right Section */}
+                    <div className="flex gap-2">
+                      {Array.from({ length: rightSeats }).map((_, seatIndex) => {
+                        const seatNumber = seatsPerRow - seatIndex;
+                        const isBooked = bookedSeats.some(
+                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                        );
+                        const isSelected = selectedSeats.some(
+                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                        );
+
+                        return (
+                          <div
+                            key={seatNumber}
+                            className={`w-8 h-8 flex justify-center items-center border border-gray-500 rounded-lg text-sm transition-all ${
+                              isBooked
+                                ? "bg-gray-300 cursor-not-allowed opacity-70"
+                                : isSelected
+                                ? "bg-green-500 border-green-500"
+                                : "bg-transparent cursor-pointer hover:bg-blue-300 hover:border-blue-300"
+                            }`}
+                            onClick={() =>
+                              !isBooked && handleSeatSelection(rowLabel, seatNumber, 199)
+                            }
+                          >
+                            {seatNumber}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Non-Premium Section (Rows N-P, Closest to Screen) */}
+            <h4 className="text-lg font-semibold mb-4 text-gray-300">Non-Premium (₹149)</h4>
+            <div className="flex flex-col items-center mb-8">
+              {Array.from({ length: 3 }).map((_, rowIndex) => {
+                const rowLabel = String.fromCharCode(78 + rowIndex); // N to P
+                const seatsPerRow = 22;
+                const leftSeats = Math.floor(seatsPerRow / 2);
+                const rightSeats = seatsPerRow - leftSeats;
+
+                return (
+                  <div key={rowLabel} className="flex items-center mb-4">
+                    {/* Row Label */}
+                    <span className="w-8 text-white font-semibold mr-2 flex items-center justify-center">
+                      {rowLabel}
+                    </span>
+                    {/* Left Section */}
+                    <div className="flex gap-2">
+                      {Array.from({ length: leftSeats }).map((_, seatIndex) => {
+                        const seatNumber = leftSeats - seatIndex;
+                        const isBooked = bookedSeats.some(
+                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                        );
+                        const isSelected = selectedSeats.some(
+                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                        );
+
+                        return (
+                          <div
+                            key={seatNumber}
+                            className={`w-8 h-8 flex justify-center items-center border border-gray-500 rounded-lg text-sm transition-all ${
+                              isBooked
+                                ? "bg-gray-300 cursor-not-allowed opacity-70"
+                                : isSelected
+                                ? "bg-green-500 border-green-500"
+                                : "bg-transparent cursor-pointer hover:bg-gray-400 hover:border-gray-400"
+                            }`}
+                            onClick={() =>
+                              !isBooked && handleSeatSelection(rowLabel, seatNumber, 149)
+                            }
+                          >
+                            {seatNumber}
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {/* Aisle (gap) */}
+                    <div className="w-6"></div>
+                    {/* Right Section */}
+                    <div className="flex gap-2">
+                      {Array.from({ length: rightSeats }).map((_, seatIndex) => {
+                        const seatNumber = seatsPerRow - seatIndex;
+                        const isBooked = bookedSeats.some(
+                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                        );
+                        const isSelected = selectedSeats.some(
+                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                        );
+
+                        return (
+                          <div
+                            key={seatNumber}
+                            className={`w-8 h-8 flex justify-center items-center border border-gray-500 rounded-lg text-sm transition-all ${
+                              isBooked
+                                ? "bg-gray-300 cursor-not-allowed opacity-70"
+                                : isSelected
+                                ? "bg-green-500 border-green-500"
+                                : "bg-transparent cursor-pointer hover:bg-gray-400 hover:border-gray-400"
+                            }`}
+                            onClick={() =>
+                              !isBooked && handleSeatSelection(rowLabel, seatNumber, 149)
+                            }
+                          >
+                            {seatNumber}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Enhanced Screen with Red Glow Lights */}
+            <div className="relative w-3/4 h-16 bg-gradient-to-b from-gray-800 to-gray-900 mx-auto rounded-b-[80px] shadow-2xl overflow-hidden">
+              {/* Red Glow Effect */}
+              <div className="absolute inset-0 shadow-[0_0_30px_10px_rgba(239,68,68,0.7)] rounded-b-[80px]"></div>
+              {/* Outer Red Glow */}
+              <div className="absolute inset-0 shadow-[0_0_50px_20px_rgba(239,68,68,0.4)] rounded-b-[80px]"></div>
+              {/* Inner Shadow for Depth */}
+              <div className="absolute inset-0 shadow-inner rounded-b-[80px]"></div>
+              {/* Red Accent Lights */}
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-red-600 to-red-400"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-3 bg-gradient-to-r from-red-600 to-red-400"></div>
+              {/* Subtle Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50"></div>
+              {/* Screen Label */}
+              <div className="absolute inset-0 flex items-center justify-center text-gray-300 text-sm font-semibold opacity-70">
+                SCREEN
+              </div>
+            </div>
+
+            {/* Seat Legend */}
+            <div className="mt-10 flex justify-center gap-6 text-sm flex-wrap">
+              <div className="flex items-center">
+                <div className="w-6 h-6 border border-gray-500 rounded"></div>
+                <span className="ml-2">Available</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-6 h-6 bg-green-500 rounded"></div>
+                <span className="ml-2">Selected</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-6 h-6 bg-gray-300 rounded"></div>
+                <span className="ml-2">Sold</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {showPayment && (
+        <Payment
+          onClose={() => setShowPayment(false)}
+          onPaymentSuccess={handlePaymentSuccess}
+        />
+      )}
+    </div>
   );
 };
 
