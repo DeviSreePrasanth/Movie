@@ -2,151 +2,230 @@ import React from 'react';
 import { IoIosPeople } from "react-icons/io"; 
 import { FaGlobe, FaCity } from "react-icons/fa";
 import { BiCameraMovie } from "react-icons/bi";
+import { motion } from "framer-motion";
 
 const AboutUs = () => {
   return (
     <>
       <style>
         {`
-        .about-us {
-          font-family: 'Arial', sans-serif;
-          color: #333;
-          padding: 20px;
-          max-width: 1200px;
-          margin: 0 auto;
-          background-color: #;
-        
-        }
+          .about-us {
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+          }
 
-        h1, h2, h3 {
-          color: #000;
-        }
+          .about-us::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.8) 80%);
+            z-index: 0;
+          }
 
-        h1 {
-          font-size: 2.5rem;
-          margin-bottom: 20px;
-        }
+          h1, h2, h3 {
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          }
 
-        h2 {
-          font-size: 2rem;
-          margin-bottom: 20px;
-        }
+          h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
 
-        h3 {
-          font-size: 1.5rem;
-          margin-bottom: 10px;
-        }
+          h2 {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+          }
 
-        p {
-          margin-left: 20px;
-          line-height: 1.8;
-          font-size: 1.1rem;
-        }
+          h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+          }
 
-        .hero {
-          text-align: center;
-          margin-bottom: 40px;
-        }
+          p {
+            margin-left: 20px;
+            line-height: 1.9;
+            font-size: 1.2rem;
+            color: #e0e0e0;
+          }
 
-        .our-story, .quick-facts, .mission, .join-us {
-          margin-bottom: 40px;
-        }
+          .hero {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 1;
+          }
 
-        .achievements, .facts-grid {
-          display: flex;
-          justify-content: space-between;
-          flex-wrap: wrap;
-          gap: 20px;
-        }
+          .our-story, .quick-facts, .mission, .join-us {
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 1;
+          }
 
-        .achievement, .fact {
-          text-align: center;
-          flex: 1;
-          padding: 20px;
-          background: #f4f4f4;
-          border: 1px solid #ddd;
-          border-radius: 6px;
-        }
+          .achievements, .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            justify-content: center;
+          }
 
-        .achievement h3, .fact h3 {
-          color: #00A8E8;
-          margin-bottom: 10px;
-        }
+          .achievement, .fact {
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+          }
 
-        .mission p, .join-us p {
-          font-size: 1.2rem;
-          line-height: 1.6;
-        }
+          .achievement:hover, .fact:hover {
+            transform readableY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+          }
+
+          .achievement h3, .fact h3 {
+            color: #ff6b6b;
+            font-weight: 600;
+            margin-bottom: 12px;
+          }
+
+          .mission p, .join-us p {
+            font-size: 1.3rem;
+            line-height: 1.7;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+          }
+
+          .join-us {
+            text-align: center;
+          }
+
+          .join-us button {
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            background: linear-gradient(to right, #ff6b6b, #4ecdc4);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+          }
+
+          .join-us button:hover {
+            transform: scale(1.1);
+          }
         `}
       </style>
       <div className="about-us">
-        <section className="hero">
+        <motion.section
+          className="hero"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
           <h1>About Us</h1>
           <p>
-            25 years ago, in a small town, a simple idea was born: to make movie experiences more accessible, enjoyable, and memorable for everyone. What started as a dream has now blossomed into a thriving platform that brings movies closer to millions of fans across the world. Over the years, we’ve built something special, and we’re excited to continue this journey with you.
+            25 years ago, in a little town, we had an idea: make watching movies easy and fun for everyone. That small thought turned into something big—a place where millions of people enjoy movies every day. We’ve come a long way, and we’re excited to keep going with you!
           </p>
-        </section>
+        </motion.section>
 
-        <section className="our-story">
-          <h3>Our Story</h3>
+        <motion.section
+          className="our-story"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h3>How We Started</h3>
           <p>
-            Our journey began with a vision to create a seamless movie booking experience. Today, we are proud to be a part of the lives of millions of movie enthusiasts. From humble beginnings, we have grown to become a trusted name in the entertainment industry.
+            It all began with a simple goal: make booking movie tickets super easy. Now, we’re happy to help tons of movie fans every day. From a tiny start, we’ve grown into a name people trust for their movie fun.
           </p>
           <div className="achievements">
-            <div className="achievement">
+            <motion.div className="achievement" whileHover={{ scale: 1.05 }}>
               <h3>50 Million+</h3>
-              <p>App Downloads</p>
-            </div>
-            <div className="achievement">
+              <p>App Users</p>
+            </motion.div>
+            <motion.div className="achievement" whileHover={{ scale: 1.05 }}>
               <h3>15 Million+</h3>
-              <p>Tickets Booked Every Month</p>
-            </div>
-            <div className="achievement">
+              <p>Tickets Sold Monthly</p>
+            </motion.div>
+            <motion.div className="achievement" whileHover={{ scale: 1.05 }}>
               <h3>2 Billion+</h3>
-              <p>Page Views Monthly</p>
-            </div>
+              <p>Page Visits Monthly</p>
+            </motion.div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="quick-facts">
-          <h3>Quick Facts</h3>
+        <motion.section
+          className="quick-facts"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h3>Fun Facts</h3>
           <div className="facts-grid">
-            <div className="fact">
-              <IoIosPeople size={50} color="#00A8E8" />
+            <motion.div className="fact" whileHover={{ scale: 1.05 }}>
+              <IoIosPeople size={60} color="#ff6b6b" />
               <h3>30 Million+</h3>
-              <p>Customers</p>
-            </div>
-            <div className="fact">
-              <FaGlobe size={50} color="#00A8E8" />
+              <p>Happy Users</p>
+            </motion.div>
+            <motion.div className="fact" whileHover={{ scale: 1.05 }}>
+              <FaGlobe size={60} color="#ff6b6b" />
               <h3>5</h3>
               <p>Countries</p>
-            </div>
-            <div className="fact">
-              <FaCity size={50} color="#00A8E8" />
+            </motion.div>
+            <motion.div className="fact" whileHover={{ scale: 1.05 }}>
+              <FaCity size={60} color="#ff6b6b" />
               <h3>650+</h3>
               <p>Towns and Cities</p>
-            </div>
-            <div className="fact">
-              <BiCameraMovie size={50} color="#00A8E8" />
+            </motion.div>
+            <motion.div className="fact" whileHover={{ scale: 1.05 }}>
+              <BiCameraMovie size={60} color="#ff6b6b" />
               <h3>5000+</h3>
               <p>Screens</p>
-            </div>
+            </motion.div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="mission">
-          <h3>Our Mission</h3>
+        <motion.section
+          className="mission"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h3>What We’re About</h3>
           <p>
-            At Movie Hub, our mission is simple: to bring the joy of movies to every corner of the world. We believe that movies are more than just entertainment—they are a gateway to new worlds, cultures, and emotions. We are committed to making the movie-going experience easy, accessible, and enjoyable for everyone.
+            At Movie Hub, we want to make movies fun and easy for everyone, everywhere. We think movies are more than just something to watch—they’re a way to feel happy, explore new places, and share stories. We’re here to make your movie time awesome!
           </p>
-        </section>
+        </motion.section>
 
-        <section className="join-us">
-          <h3>Join Us</h3>
+        <motion.section
+          className="join-us"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h3>Come Along!</h3>
           <p>
-            Whether you're a movie buff, a casual viewer, or someone who just enjoys a good story, we invite you to join us on this exciting journey. Together, we can create even more magical moments, one movie at a time.
+            Love movies a lot? Or just like watching one sometimes? Either way, we’d love for you to be part of our movie adventure. Let’s make some great movie moments together!
           </p>
-        </section>
+          <button>Book Tickets</button>
+        </motion.section>
       </div>
     </>
   );

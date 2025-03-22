@@ -134,7 +134,7 @@ function Layout({ children }) {
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen flex flex-col bg-gray-100 font-sans">
+      <div className="min-h-screen flex flex-col bg-black font-sans">
         <Layout>
           <Routes>
             <Route path="/" element={<Login />} />
