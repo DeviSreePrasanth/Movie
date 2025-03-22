@@ -12,282 +12,128 @@ const Header = () => {
   };
 
   return (
-    <>
-      <style>
-        {`
-          .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: black;
-            color: #ffffff;
-            position: relative;
-          }
-
-          .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 20px;
-            position: relative;
-          }
-
-          .nav-links li {
-            color: inherit;
-            font-weight: 500;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: color 0.4s ease;
-          }
-
-          .nav-links li::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: #ab0a10;
-            transform: scaleX(0);
-            transform-origin: bottom left;
-            transition: transform 0.6s ease-out;
-          }
-
-          .nav-links li:hover::before {
-            transform: scaleX(1);
-          }
-
-          .nav-links li:hover {
-            color: #a7a9be;
-          }
-
-          .search-bar {
-            display: flex;
-            align-items: center;
-            border-radius: 50px;
-            background-color: #333;
-            padding: 5px;
-            transition: width 0.6s ease-out, background-color 0.4s ease, box-shadow 0.4s ease-out;
-            width: 200px;
-          }
-
-          .search-bar.focused {
-            width: 350px;
-            background-color: #444;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-          }
-
-          .search-bar input {
-            border: none;
-            outline: none;
-            background-color: transparent;
-            color: #ffffff;
-            padding: 5px 10px;
-            border-radius: 50px;
-            width: 100%;
-            transition: color 0.3s ease;
-          }
-
-          .search-bar input::placeholder {
-            color: #a7a9be;
-            opacity: 0.8;
-            transition: color 0.3s ease;
-          }
-
-          .search-bar button {
-            background: transparent;
-            border: none;
-            color: #ffffff;
-            cursor: pointer;
-            margin-left: 5px;
-            padding: 5px;
-            transition: color 0.3s ease, background-color 0.3s ease;
-          }
-
-          .search-bar button:hover {
-            color: #a7a9be;
-            background-color: rgba(255, 255, 255, 0.1);
-          }
-
-          .nav-icons {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-          }
-
-          .icon {
-            width: 24px;
-            height: 24px;
-            color: inherit;
-            cursor: pointer;
-            transition: color 0.3s ease, box-shadow 0.3s ease;
-          }
-
-          .icon:hover {
-            color: #a7a9be;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-          }
-
-          .hamburger-menu {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            align-items: center;
-          }
-
-          .hamburger-menu div {
-            width: 25px;
-            height: 3px;
-            background-color: white;
-            border-radius: 3px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-          }
-
-          .hamburger-menu.active div:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 6px);
-          }
-
-          .hamburger-menu.active div:nth-child(2) {
-            opacity: 0;
-          }
-
-          .hamburger-menu.active div:nth-child(3) {
-            transform: rotate(-45deg) translate(5px, -6px);
-          }
-
-          .mobile-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: black;
-            color: #ffffff;
-            padding: 20px;
-            border-radius: 4px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-          }
-
-          .mobile-menu.active {
-            display: block;
-          }
-
-          .mobile-menu a {
-            display: block;
-            padding: 10px 0;
-            color: #ffffff;
-            text-decoration: none;
-            transition: color 0.3s ease;
-          }
-
-          .mobile-menu a:hover {
-            color: #a7a9be;
-          }
-
-          @media (max-width: 768px) {
-            .nav-links {
-              display: none;
-            }
-
-            .nav-icons {
-              display: none;
-            }
-
-            .hamburger-menu {
-              display: flex;
-              align-items: center;
-              position: absolute;
-              top: 50%;
-              right: 20px;
-              transform: translateY(-50%);
-            }
-
-            .header {
-              flex-direction: column;
-              align-items: flex-start;
-            }
-          }
-
-          @media (max-width: 600px) {
-            .search-bar {
-              width: calc(100% - 50px);
-              margin-top: 10px;
-            }
-
-            .search-bar.focused {
-              width: calc(100% - 50px);
-            }
-
-            .hamburger-menu {
-              display: flex;
-              align-items: center;
-              position: absolute;
-              top: 50%;
-              right: 20px;
-              transform: translateY(-50%);
-            }
-          }
-        `}
-      </style>
-      <nav className="header">
+    <nav className="flex justify-between items-center px-5 py-3 bg-black text-white relative z-20">
+      {/* Hamburger Menu for Mobile */}
+      <div
+        className={`flex flex-col gap-1.5 cursor-pointer md:hidden ${mobileMenuOpen ? "space-y-0" : ""}`}
+        onClick={toggleMobileMenu}
+      >
         <div
-          className={`hamburger-menu ${mobileMenuOpen ? "active" : ""}`}
-          onClick={toggleMobileMenu}
-        >
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-        <ul className={`nav-links ${mobileMenuOpen ? "active" : ""}`}>
-          <Link to="/home" style={{ textDecoration: "none", color: "white" }}>
-            <li>Home</li>
+          className={`w-6 h-0.5 bg-white rounded transition-transform duration-300 ${
+            mobileMenuOpen ? "rotate-45 translate-y-2" : ""
+          }`}
+        ></div>
+        <div
+          className={`w-6 h-0.5 bg-white rounded transition-opacity duration-300 ${
+            mobileMenuOpen ? "opacity-0" : ""
+          }`}
+        ></div>
+        <div
+          className={`w-6 h-0.5 bg-white rounded transition-transform duration-300 ${
+            mobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
+          }`}
+        ></div>
+      </div>
+
+      {/* Navigation Links (Desktop) */}
+      <ul className="hidden md:flex list-none gap-6">
+        <li>
+          <Link
+            to="/home"
+            className="text-white font-medium relative group hover:text-gray-400 transition-colors duration-300"
+          >
+            Home
+            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-700 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
           </Link>
-          <Link to="/movies" style={{ textDecoration: "none", color: "white" }}>
-            <li>Movies</li>
+        </li>
+        <li>
+          <Link
+            to="/movies"
+            className="text-white font-medium relative group hover:text-gray-400 transition-colors duration-300"
+          >
+            Movies
+            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-700 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
           </Link>
-          <Link to="/about" style={{ textDecoration: "none", color: "white" }}>
-            <li>About</li>
+        </li>
+        <li>
+          <Link
+            to="/about"
+            className="text-white font-medium relative group hover:text-gray-400 transition-colors duration-300"
+          >
+            About
+            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-700 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
           </Link>
+        </li>
+        <li>
           <Link
             to="/history"
-            style={{ textDecoration: "none", color: "white" }}
+            className="text-white font-medium relative group hover:text-gray-400 transition-colors duration-300"
           >
-            <li>Payment History</li>
+            Payment History
+            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-700 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
           </Link>
-        </ul>
-        <div className={`mobile-menu ${mobileMenuOpen ? "active" : ""}`}>
-          <Link to="/home" onClick={toggleMobileMenu}>
-            Home
-          </Link>
-          <Link to="/movies" onClick={toggleMobileMenu}>
-            Movies
-          </Link>
-          <Link to="/about" onClick={toggleMobileMenu}>
-            About
-          </Link>
-          <Link to="/myorder" onClick={toggleMobileMenu}>
-            My Order
-          </Link>
-        </div>
-        <div className={`search-bar ${searchFocused ? "focused" : ""}`}>
-          <input
-            type="text"
-            placeholder="Search..."
-            onFocus={() => setSearchFocused(true)}
-            onBlur={() => setSearchFocused(false)}
-          />
-          <button type="button">
-            <BiSearch className="icon search-icon" />
-          </button>
-        </div>
-        <div className="nav-icons">
-          <Profile />
-        </div>
-      </nav>
-    </>
+        </li>
+      </ul>
+
+      {/* Mobile Menu */}
+      <div
+        className={`absolute top-full left-0 w-full bg-black text-white p-5 rounded-b-lg shadow-lg transition-all duration-300 md:hidden ${
+          mobileMenuOpen ? "block" : "hidden"
+        }`}
+      >
+        <Link
+          to="/home"
+          className="block py-2 text-white hover:text-gray-400 transition-colors duration-300"
+          onClick={toggleMobileMenu}
+        >
+          Home
+        </Link>
+        <Link
+          to="/movies"
+          className="block py-2 text-white hover:text-gray-400 transition-colors duration-300"
+          onClick={toggleMobileMenu}
+        >
+          Movies
+        </Link>
+        <Link
+          to="/about"
+          className="block py-2 text-white hover:text-gray-400 transition-colors duration-300"
+          onClick={toggleMobileMenu}
+        >
+          About
+        </Link>
+        <Link
+          to="/myorder"
+          className="block py-2 text-white hover:text-gray-400 transition-colors duration-300"
+          onClick={toggleMobileMenu}
+        >
+          My Order
+        </Link>
+      </div>
+
+      {/* Search Bar */}
+      <div
+        className={`flex items-center rounded-full bg-gray-700 px-3 py-1.5 transition-all duration-300 ${
+          searchFocused ? "w-80 bg-gray-600 shadow-lg" : "w-52"
+        } md:w-48 lg:w-52 md:focus-within:w-64 lg:focus-within:w-80`}
+      >
+        <input
+          type="text"
+          placeholder="Search..."
+          className="border-none outline-none bg-transparent text-white placeholder-gray-400 placeholder-opacity-80 w-full px-2 py-1 transition-colors duration-300"
+          onFocus={() => setSearchFocused(true)}
+          onBlur={() => setSearchFocused(false)}
+        />
+        <button type="button" className="bg-transparent border-none text-white cursor-pointer p-1 hover:bg-gray-500 hover:rounded-full transition-all duration-300">
+          <BiSearch className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Profile Icon (Desktop) */}
+      <div className="hidden md:flex items-center gap-5">
+        <Profile />
+      </div>
+    </nav>
   );
 };
 

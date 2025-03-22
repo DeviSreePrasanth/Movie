@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import MovieSection from './components/Moviesection';
 import Footer from './components/Footer';
@@ -8,44 +8,36 @@ import AboutUs from './components/AboutUs';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { fetchMovies } from './services/api';
 
-import lionImage from './images/lion.jpg';
-import vikingsImage from './images/vikings.jpg';
-import greyImage from './images/grey.jpg';
-import starImage from './images/star.jpg';
-import jokerImage from './images/jocker.jpg';
-import avatarImage from './images/avatar.jpg';
-import doraImage from './images/dora.jpg';
-import blissImage from './images/bliss.jpg';
-import blackImage from './images/black.jpg';
-import titanicImage from './images/titanic.jpg';
-import johnImage from './images/john.jpg';
-import alienImage from './images/alien.jpg';
-import deadpoolImage from './images/deadpool.jpg';
-import mortalImage from './images/mortal.jpg';
-
-const currentlyPlayingMovies = [
-  { id: 1, title: 'The Lion King', genre: 'Action', poster: lionImage },
-  { id: 2, title: 'Vikings', genre: 'Action', poster: vikingsImage },
-  { id: 3, title: 'Grey\'s Anatomy', genre: 'Drama', poster: greyImage },
-  { id: 4, title: 'Star Wars', genre: 'Drama', poster: starImage },
-  { id: 5, title: 'Joker', genre: 'Action', poster: jokerImage },
-  { id: 6, title: 'Avatar', genre: 'Action', poster: avatarImage },
-  { id: 7, title: 'Dora', genre: 'Adventure', poster: doraImage },
-];
-
-const comingSoonMovies = [
-  { id: 1, title: 'Bliss', genre: 'Romance', poster: blissImage },
-  { id: 2, title: 'Black Widow', genre: 'Romance', poster: blackImage },
-  { id: 3, title: 'Titanic 2', genre: 'Romance', poster: titanicImage },
-  { id: 4, title: 'John Wick', genre: 'Action', poster: johnImage },
-  { id: 5, title: 'Alien', genre: 'Sci-Fi', poster: alienImage },
-  { id: 6, title: 'Deadpool', genre: 'Action', poster: deadpoolImage },
-  { id: 7, title: 'Mortal Kombat', genre: 'Sci-Fi', poster: mortalImage },
-];
-
+// MoviesPage Component
 function MoviesPage() {
   const location = useLocation();
+  const [nowPlaying, setNowPlaying] = useState([]);
+  const [upcoming, setUpcoming] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadMovies = async () => {
+      setLoading(true);
+      const nowPlayingData = await fetchMovies("now_playing");
+      const upcomingData = await fetchMovies("upcoming");
+
+      if (nowPlayingData.length > 0 && upcomingData.length > 0) {
+        // Filter out duplicates by ID
+        const nowPlayingIds = new Set(nowPlayingData.map(movie => movie.id));
+        const filteredUpcoming = upcomingData.filter(movie => !nowPlayingIds.has(movie.id));
+
+        setNowPlaying(nowPlayingData);
+        setUpcoming(filteredUpcoming);
+      } else {
+        setError("Failed to fetch movies.");
+      }
+      setLoading(false);
+    };
+    loadMovies();
+  }, []);
 
   useEffect(() => {
     if (location.pathname === '/movies') {
@@ -56,20 +48,48 @@ function MoviesPage() {
     }
   }, [location]);
 
+  if (loading) return <div className="text-center text-gray-500">Loading...</div>;
+  if (error) return <div className="text-center text-red-500">{error}</div>;
+
   return (
     <>
       <Moviecenter />
       <div id="movies-section">
-        <MovieSection title="Currently Playing" movies={currentlyPlayingMovies} />
-        <MovieSection title="Coming Soon" movies={comingSoonMovies} />
+        <MovieSection title="Currently Playing" movies={nowPlaying} />
+        <MovieSection title="Coming Soon" movies={upcoming} />
       </div>
       <AboutUs />
     </>
   );
 }
 
+// AboutPage Component
 function AboutPage() {
   const location = useLocation();
+  const [nowPlaying, setNowPlaying] = useState([]);
+  const [upcoming, setUpcoming] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadMovies = async () => {
+      setLoading(true);
+      const nowPlayingData = await fetchMovies("now_playing");
+      const upcomingData = await fetchMovies("upcoming");
+
+      if (nowPlayingData.length > 0 && upcomingData.length > 0) {
+        const nowPlayingIds = new Set(nowPlayingData.map(movie => movie.id));
+        const filteredUpcoming = upcomingData.filter(movie => !nowPlayingIds.has(movie.id));
+
+        setNowPlaying(nowPlayingData);
+        setUpcoming(filteredUpcoming);
+      } else {
+        setError("Failed to fetch movies.");
+      }
+      setLoading(false);
+    };
+    loadMovies();
+  }, []);
 
   useEffect(() => {
     if (location.pathname === '/about') {
@@ -80,11 +100,14 @@ function AboutPage() {
     }
   }, [location]);
 
+  if (loading) return <div className="text-center text-gray-500">Loading...</div>;
+  if (error) return <div className="text-center text-red-500">{error}</div>;
+
   return (
     <>
       <Moviecenter />
-      <MovieSection title="Currently Playing" movies={currentlyPlayingMovies} />
-      <MovieSection title="Coming Soon" movies={comingSoonMovies} />
+      <MovieSection title="Currently Playing" movies={nowPlaying} />
+      <MovieSection title="Coming Soon" movies={upcoming} />
       <div id="about">
         <AboutUs />
       </div>
@@ -92,6 +115,7 @@ function AboutPage() {
   );
 }
 
+// Layout Component
 function Layout({ children }) {
   const location = useLocation();
   const isLoginPage = location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/login';
@@ -106,36 +130,24 @@ function Layout({ children }) {
   );
 }
 
+// App Component
 function App() {
   return (
-    <>
-      <style>
-        {`
-          .App {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-color: #f5f5f5;
-            font-family: Arial, sans-serif;
-          }
-        `}
-      </style>
-      <BrowserRouter>
-        <div className="App">
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/booking" element={<Booking />} />
-              <Route path="/booking/:movieName" element={<Booking />} />
-              <Route path="/home" element={<MoviesPage />} />
-              <Route path="/movies" element={<MoviesPage />} />
-              <Route path="/about" element={<AboutPage />} />
-            </Routes>
-          </Layout>
-        </div>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <div className="min-h-screen flex flex-col bg-gray-100 font-sans">
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/booking" element={<Booking />} />
+            <Route path="/booking/:movieName" element={<Booking />} />
+            <Route path="/home" element={<MoviesPage />} />
+            <Route path="/movies" element={<MoviesPage />} />
+            <Route path="/about" element={<AboutPage />} />
+          </Routes>
+        </Layout>
+      </div>
+    </BrowserRouter>
   );
 }
 

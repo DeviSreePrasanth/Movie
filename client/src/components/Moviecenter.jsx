@@ -1,37 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
-import godzillaImage from "../images/i2.jpg";
-import godzillaBg from "../images/i22.jpg";
-import lionImage from "../images/i0.jpeg";
-import lionBg from "../images/i00.jpg";
-import jokerImage from "../images/i1.jpg";
-import jokerBg from "../images/i11.jpg";
-import mortalImage from "../images/i3.jpg";
-import mortalBg from "../images/i33.jpg";
-import vikingsImage from "../images/i4.jpg";
-import vikingsBg from "../images/i44.jpg";
-import avengersImage from "../images/i5.jpg";
-import avengersBg from "../images/i55.jpg";
-import titanicImage from "../images/i6.jpg";
-import titanicBg from "../images/i66.jpg";
-
-const movies = [
-  { id: 1, title: "Godzilla vs Kong", imageUrl: godzillaImage, background: godzillaBg, genre: "Action" },
-  { id: 2, title: "The Lion King", imageUrl: lionImage, background: lionBg, genre: "Animation" },
-  { id: 3, title: "Joker", imageUrl: jokerImage, background: jokerBg, genre: "Thriller" },
-  { id: 4, title: "Mortal Kombat", imageUrl: mortalImage, background: mortalBg, genre: "Action" },
-  { id: 5, title: "Vikings", imageUrl: vikingsImage, background: vikingsBg, genre: "Drama" },
-  { id: 6, title: "Avengers", imageUrl: avengersImage, background: avengersBg, genre: "Action" },
-  { id: 7, title: "Titanic", imageUrl: titanicImage, background: titanicBg, genre: "Romance" },
-];
-
-// Duplicate movies for infinite loop with one extra set
-const infiniteMovies = [...movies, ...movies];
+import { fetchMovies } from "../services/api"; // Import the API service
 
 const Moviecenter = () => {
+  const [movies, setMovies] = useState([]); // State for movies
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
+  const [loading, setLoading] = useState(true); // State for loading
+  const [error, setError] = useState(null); // State for errors
+
+  // Fetch movies when the component mounts
+  useEffect(() => {
+    const loadMovies = async () => {
+      setLoading(true);
+      const data = await fetchMovies();
+      if (data.length > 0) {
+        setMovies(data);
+      } else {
+        setError("Failed to fetch movies.");
+      }
+      setLoading(false);
+    };
+    loadMovies();
+  }, []);
+
+  // Duplicate movies for infinite loop after fetching
+  const infiniteMovies = [...movies, ...movies];
 
   const handlePrevClick = () => {
     setIsTransitioning(true);
@@ -62,9 +56,21 @@ const Moviecenter = () => {
     }
   };
 
+  if (loading) {
+    return <div>Loading movies...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  if (movies.length === 0) {
+    return <div>No movies available.</div>;
+  }
+
   return (
     <>
-      {/* Custom CSS for dynamic transforms and pseudo-elements */}
+      {/* Custom CSS (same as before, omitted for brevity) */}
       <style>
         {`
           .container {
@@ -76,7 +82,6 @@ const Moviecenter = () => {
             background-position: center;
             background-repeat: no-repeat;
           }
-
           .main {
             display: flex;
             flex-direction: column;
@@ -85,7 +90,6 @@ const Moviecenter = () => {
             justify-content: flex-end;
             padding-bottom: 40px;
           }
-
           .slider-container {
             position: relative;
             width: 100%;
@@ -95,13 +99,11 @@ const Moviecenter = () => {
             overflow: hidden;
             z-index: 10;
           }
-
           .slider {
             display: flex;
             height: 100%;
-            transition: ${isTransitioning ? 'transform 0.5s ease-in-out' : 'none'};
+            transition: ${isTransitioning ? "transform 0.5s ease-in-out" : "none"};
           }
-
           .movie {
             flex: 0 0 auto;
             margin: 0 30px;
@@ -112,7 +114,6 @@ const Moviecenter = () => {
             justify-content: center;
             width: 200px;
           }
-
           .movie-image {
             width: 200px;
             height: auto;
@@ -121,18 +122,15 @@ const Moviecenter = () => {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease, opacity 0.3s ease;
           }
-
           .movie:hover .movie-image {
             height: 300px;
             opacity: 1;
           }
-
           .movie.active .movie-image {
             height: 350px;
             transform: scale(1.1);
             opacity: 1;
           }
-
           .movie-overlay {
             cursor: pointer;
             position: absolute;
@@ -147,16 +145,13 @@ const Moviecenter = () => {
             opacity: 0;
             transition: opacity 0.3s ease;
           }
-
           .movie:hover .movie-overlay {
             opacity: 1;
           }
-
           .movie-title {
             color: #fff;
             font-size: 20px;
           }
-
           .nav-button {
             position: absolute;
             top: 50%;
@@ -167,77 +162,60 @@ const Moviecenter = () => {
             padding: 8px 16px;
             cursor: pointer;
           }
-
           .nav-button.prev {
             left: 16px;
           }
-
           .nav-button.next {
             right: 16px;
           }
-
           .nav-button:hover {
             background-color: rgba(0, 0, 0, 0.7);
           }
-
           @media (max-width: 1024px) {
             .slider-container {
               height: 350px;
             }
-
             .movie {
               width: 160px;
             }
-
             .movie-image {
               width: 160px;
             }
-
             .movie:hover .movie-image {
               height: 250px;
             }
-
             .movie.active .movie-image {
               height: 300px;
               transform: scale(1.4);
             }
-
             .movie-title {
               font-size: 16px;
             }
-
             .nav-button {
               padding: 6px 12px;
             }
           }
-
           @media (max-width: 600px) {
             .slider-container {
               height: 300px;
             }
-
             .movie {
               margin: 0 10px;
               width: 100px;
             }
-
             .movie-image {
               width: 100px;
             }
-
             .movie:hover .movie-image {
               height: 180px;
             }
-
             .movie.active .movie-image {
               height: 220px;
               transform: scale(1.2);
             }
-
             .movie-title {
               font-size: 14px;
             }
-
             .nav-button {
               padding: 6px 10px;
             }
@@ -257,7 +235,7 @@ const Moviecenter = () => {
             >
               ❮
             </button>
-            <div 
+            <div
               className="slider"
               style={{
                 transform: `translateX(-${currentIndex * (200 + 60)}px)`,
@@ -281,7 +259,7 @@ const Moviecenter = () => {
                       className="block text-white no-underline"
                     >
                       <img
-                        src={movie.imageUrl}
+                        src={movie.imageUrl} // Ensure API returns imageUrl
                         alt={movie.title}
                         className={`movie-image transition-all duration-300`}
                         loading="lazy"

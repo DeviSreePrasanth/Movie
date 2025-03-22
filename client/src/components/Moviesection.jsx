@@ -1,63 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { fetchMovies } from '../services/api';
 
-function MovieSection({ title, movies }) {
+function MovieSection({ title, type }) {
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadMovies = async () => {
+      setLoading(true);
+      const data = await fetchMovies(type);
+      if (data.length > 0) {
+        setMovies(data);
+      } else {
+        setError(`Failed to fetch ${title.toLowerCase()} movies.`);
+      }
+      setLoading(false);
+    };
+    loadMovies();
+  }, [type, title]);
+
+  if (loading) return <div className="text-center text-gray-500">Loading {title.toLowerCase()}...</div>;
+  if (error) return <div className="text-center text-red-500">Error: {error}</div>;
+  if (movies.length === 0) return <div className="text-center text-gray-500">No {title.toLowerCase()} available.</div>;
+
   return (
-    <div style={{
-      overflow: 'hidden',
-      padding: '10px 0',
-      position: 'relative'
-    }}>
-      <h2 style={{ margin: '0 0 20px 20px' }}>{title}</h2>
-      <div style={{
-        display: 'flex',
-        gap: '50px',
-        overflowX: 'auto',
-        padding: '10px 0',
-        scrollSnapType: 'x mandatory',
-        WebkitOverflowScrolling: 'touch',
-        scrollBehavior: 'smooth',
-        scrollbarWidth: 'none', // Firefox
-        '::-webkit-scrollbar': { display: 'none' } // Webkit browsers (Chrome, Safari)
-      }}>
+    <div className="overflow-hidden py-2">
+      <h2 className="text-2xl font-semibold mb-5 ml-5">{title}</h2>
+      <div className="flex gap-12 overflow-x-auto p-2 snap-x snap-mandatory scroll-smooth scrollbar-none">
         {movies.map(movie => (
-          <div key={movie.id} style={{
-            flex: '0 0 auto',
-            width: '200px',
-            position: 'relative',
-            textAlign: 'center',
-            backgroundColor: '#fff',
-            borderRadius: '8px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-            overflow: 'hidden',
-            transition: 'transform 0.3s ease',
-            ':hover': { transform: 'scale(1.05)' } // Note: Pseudo-classes like :hover are limited in inline styles
-          }}>
-            <Link to={`/booking/${movie.title}`} style={{ textDecoration: 'none', color: 'white' }}>
+          <div
+            key={movie.id}
+            className="flex-none w-52 h-[350px] relative text-center bg-white rounded-lg shadow-md overflow-hidden transform transition-transform duration-300 hover:scale-105 snap-center"
+          >
+            <Link to={`/booking/${movie.title}`}>
               <img
-                src={movie.poster}
+                src={movie.imageUrl || 'https://via.placeholder.com/200x300?text=No+Image'}
                 alt={movie.title}
-                style={{
-                  width: '100%',
-                  height: '300px',
-                  objectFit: 'cover',
-                  borderRadius: '8px'
-                }}
+                className="w-full h-full object-cover rounded-lg"
+                onError={(e) => (e.target.src = 'https://via.placeholder.com/200x300?text=No+Image')}
+                loading="lazy"
               />
             </Link>
-            <div style={{
-              position: 'absolute',
-              bottom: 0,
-              width: '100%',
-              padding: '8px',
-              background: 'rgba(0, 0, 0, 0.6)',
-              color: '#fff',
-              textAlign: 'center',
-              borderRadius: '0 0 8px 8px',
-              boxSizing: 'border-box'
-            }}>
-              <h3 style={{ margin: 0, fontSize: '16px' }}>{movie.title}</h3>
-              <p style={{ margin: 0, fontSize: '12px', opacity: 0.8 }}>{movie.genre}</p>
+            <div className="absolute bottom-0 w-full p-2 bg-black bg-opacity-60 text-white rounded-b-lg">
+              <h3 className="text-base font-medium m-0">{movie.title}</h3>
+              <p className="text-xs opacity-80 m-0">{movie.genre}</p>
             </div>
           </div>
         ))}
