@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-// Custom CSS for animations and background blur
 const GlobalStyle = () => (
   <style>
     {`
