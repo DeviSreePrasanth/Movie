@@ -1,7 +1,5 @@
 import React from 'react';
-import { IoIosPeople } from "react-icons/io"; 
-import { FaGlobe, FaCity } from "react-icons/fa";
-import { BiCameraMovie } from "react-icons/bi";
+import { FaUsers, FaGlobe, FaLandmark, FaFilm } from "react-icons/fa"; // Fixed import
 import { motion } from "framer-motion";
 
 const AboutUs = () => {
@@ -53,14 +51,14 @@ const AboutUs = () => {
 
           h3 {
             font-size: 1.8rem;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
           }
 
           p {
-            margin-left: 20px;
             line-height: 1.9;
             font-size: 1.2rem;
             color: #e0e0e0;
+            /* Remove left margin for facts */
           }
 
           .hero {
@@ -94,16 +92,43 @@ const AboutUs = () => {
           }
 
           .achievement:hover, .fact:hover {
-            transform readableY(-10px);
+            transform: translateY(-10px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
           }
 
           .achievement h3, .fact h3 {
             color: #ff6b6b;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+          }
+.fact-icon {
+            margin-bottom: 1rem; /* Responsive spacing below icon */
+            margin-left: auto; /* Center horizontally with margin-right */
+            margin-right: auto;
+            display: block; /* Ensures centering */
+            width: fit-content; /* Keeps icon size natural */
           }
 
+          /* Responsive adjustments */
+          @media (max-width: 768px) {
+            .fact-icon {
+              margin-bottom: 0.75rem; /* Slightly less spacing on tablets */
+              font-size: 2.5rem; /* Adjust icon size */
+            }
+          }
+
+          @media (max-width: 480px) {
+            .fact-icon {
+              margin-bottom: 0.5rem; /* Even less spacing on phones */
+              font-size: 2rem; /* Smaller icons on mobile */
+            }
+            .fact h3 {
+              font-size: 1.5rem; /* Adjust number size */
+            }
+            .fact p {
+              font-size: 1rem; /* Adjust text size */
+            }
+          }
           .mission p, .join-us p {
             font-size: 1.3rem;
             line-height: 1.7;
@@ -133,24 +158,14 @@ const AboutUs = () => {
         `}
       </style>
       <div className="about-us">
-        <motion.section
-          className="hero"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
+        <motion.section className="hero" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
           <h1>About Us</h1>
           <p>
             25 years ago, in a little town, we had an idea: make watching movies easy and fun for everyone. That small thought turned into something big—a place where millions of people enjoy movies every day. We’ve come a long way, and we’re excited to keep going with you!
           </p>
         </motion.section>
 
-        <motion.section
-          className="our-story"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        >
+        <motion.section className="our-story" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }}>
           <h3>How We Started</h3>
           <p>
             It all began with a simple goal: make booking movie tickets super easy. Now, we’re happy to help tons of movie fans every day. From a tiny start, we’ve grown into a name people trust for their movie fun.
@@ -171,55 +186,40 @@ const AboutUs = () => {
           </div>
         </motion.section>
 
-        <motion.section
-          className="quick-facts"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        >
+        <motion.section className="quick-facts" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }}>
           <h3>Fun Facts</h3>
           <div className="facts-grid">
             <motion.div className="fact" whileHover={{ scale: 1.05 }}>
-              <IoIosPeople size={60} color="#ff6b6b" />
+              <FaUsers size={60} color="#ff6b6b" className="fact-icon" />
               <h3>30 Million+</h3>
               <p>Happy Users</p>
             </motion.div>
             <motion.div className="fact" whileHover={{ scale: 1.05 }}>
-              <FaGlobe size={60} color="#ff6b6b" />
+              <FaGlobe size={60} color="#ff6b6b" className="fact-icon" />
               <h3>5</h3>
               <p>Countries</p>
             </motion.div>
             <motion.div className="fact" whileHover={{ scale: 1.05 }}>
-              <FaCity size={60} color="#ff6b6b" />
+              <FaLandmark size={60} color="#ff6b6b" className="fact-icon" />
               <h3>650+</h3>
               <p>Towns and Cities</p>
             </motion.div>
             <motion.div className="fact" whileHover={{ scale: 1.05 }}>
-              <BiCameraMovie size={60} color="#ff6b6b" />
+              <FaFilm size={60} color="#ff6b6b" className="fact-icon" />
               <h3>5000+</h3>
               <p>Screens</p>
             </motion.div>
           </div>
         </motion.section>
 
-        <motion.section
-          className="mission"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        >
+        <motion.section className="mission" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }}>
           <h3>What We’re About</h3>
           <p>
             At Movie Hub, we want to make movies fun and easy for everyone, everywhere. We think movies are more than just something to watch—they’re a way to feel happy, explore new places, and share stories. We’re here to make your movie time awesome!
           </p>
         </motion.section>
 
-        <motion.section
-          className="join-us"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        >
+        <motion.section className="join-us" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }}>
           <h3>Come Along!</h3>
           <p>
             Love movies a lot? Or just like watching one sometimes? Either way, we’d love for you to be part of our movie adventure. Let’s make some great movie moments together!
