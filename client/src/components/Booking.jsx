@@ -5,7 +5,7 @@ import Payment from "./Payment";
 import SeatSelectionPopup from "./SeatSelectionPopup";
 
 const Booking = () => {
-  const { movieName } = useParams();
+  const { movieName } = useParams();     
   const [showPopup, setShowPopup] = useState(true);
   const [numSeats, setNumSeats] = useState(0);
   const [selectedSeats, setSelectedSeats] = useState([]);
