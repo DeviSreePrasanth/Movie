@@ -51,7 +51,7 @@ function App() {
               <div className="flex flex-col">
                 <Header />
                 <Moviecenter movies={movies} />
-                <Moviesection movies={movies} title="Featured Movies" />
+                <Moviesection movies={movies}  />
                 <AboutUs />
                 <Footer />
               </div>
