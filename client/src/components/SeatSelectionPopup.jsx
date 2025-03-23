@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const SeatSelectionPopup = ({ onConfirm, movieTitle }) => {
-  const today = new Date().toISOString().split("T")[0]; // Gets current date (e.g., "2025-03-22")
+  const today = new Date().toISOString().split("T")[0]; // Gets current date (e.g., "2025-03-23")
 
   const [numSeats, setNumSeats] = useState(2);
   const [selectedDate, setSelectedDate] = useState(today); // Default to today
@@ -31,12 +31,15 @@ const SeatSelectionPopup = ({ onConfirm, movieTitle }) => {
     onConfirm({ numSeats, date: selectedDate, time: selectedTime });
   };
 
+  // Fallback for movieTitle if it's missing
+  const displayTitle = movieTitle || "Unknown Movie";
+
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-md">
       <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-8 w-11/12 max-w-lg shadow-2xl border border-gray-700">
         {/* Header */}
         <h2 className="text-2xl font-bold text-white mb-6 text-center">
-          Book Tickets for <span className="text-red-500">{movieTitle}</span>
+          Book Tickets for <span className="text-red-500">{displayTitle}</span>
         </h2>
 
         {/* Number of Seats Selection */}

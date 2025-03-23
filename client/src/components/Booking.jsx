@@ -5,7 +5,9 @@ import Payment from "./Payment";
 import SeatSelectionPopup from "./SeatSelectionPopup";
 
 const Booking = () => {
-  const { movieName } = useParams();     
+  const { movieName } = useParams();
+  const movieTitle = decodeURIComponent(movieName); // Simplified: decodeURIComponent already handles %20
+
   const [showPopup, setShowPopup] = useState(true);
   const [numSeats, setNumSeats] = useState(0);
   const [selectedSeats, setSelectedSeats] = useState([]);
@@ -14,8 +16,6 @@ const Booking = () => {
   const [bookedSeats, setBookedSeats] = useState([]);
   const [error, setError] = useState("");
   const [showPayment, setShowPayment] = useState(false);
-
-  const movieTitle = decodeURIComponent(movieName).replace(/%20/g, " ");
 
   useEffect(() => {
     const fetchBookedSeats = async () => {
