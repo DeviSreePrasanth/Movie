@@ -5,8 +5,6 @@ import Footer from './components/Footer';
 import Moviecenter from './components/Moviecenter';
 import Booking from './components/Booking';
 import AboutUs from './components/AboutUs';
-import Login from './components/Login';
-import Signup from './components/Signup';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { fetchMovies } from './services/api';
 
@@ -137,11 +135,9 @@ function App() {
       <div className="min-h-screen flex flex-col bg-black font-sans">
         <Layout>
           <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
             <Route path="/booking" element={<Booking />} />
             <Route path="/booking/:movieName" element={<Booking />} />
-            <Route path="/home" element={<MoviesPage />} />
+            <Route path="/" element={<MoviesPage />} />
             <Route path="/movies" element={<MoviesPage />} />
             <Route path="/about" element={<AboutPage />} />
           </Routes>
