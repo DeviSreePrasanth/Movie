@@ -129,32 +129,30 @@ const Booking = () => {
 
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 text-gray-200 font-poppins flex flex-col md:flex-row overflow-x-hidden">
-      {/* Sidebar: Selected Seats */}
-      <div className="w-full md:w-80 relative">
-        <div className="absolute inset-0 bg-black/75 p-4 sm:p-6 flex flex-col items-center justify-start backdrop-blur-md">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 text-cyan-400">
-            {decodedMovieTitle}
-          </h2>
+      {/* Booking Details (Sidebar on Desktop, Below on Mobile) */}
+      <div className="w-full md:w-80 relative md:order-first order-last">
+        <div className="md:absolute inset-0 bg-black/75 p-4 md:p-6 flex flex-col items-center justify-start backdrop-blur-md">
+          <h2 className="text-xl md:text-3xl font-bold mb-3 text-cyan-400">{decodedMovieTitle}</h2>
           <div className="w-3/4 h-1 bg-cyan-500 my-3 rounded-full"></div>
-          <p className="text-xs sm:text-sm mb-3 text-gray-300">
+          <p className="text-xs md:text-sm mb-3 text-gray-300">
             Date: {selectedDate ? new Date(selectedDate).toLocaleDateString("en-US", { day: "numeric", month: "short" }) : "N/A"} | Time: {selectedTime || "N/A"}
           </p>
-          <h3 className="text-base sm:text-lg font-semibold mb-6 text-cyan-400">
+          <h3 className="text-base md:text-lg font-semibold mb-6 text-cyan-400">
             Selected Seats ({selectedSeats.length}/{numSeats})
           </h3>
           <div className="w-full mb-6">
             {selectedSeats.length === 0 ? (
-              <p className="opacity-70 text-center text-gray-400 text-xs sm:text-sm">No seats selected yet.</p>
+              <p className="opacity-70 text-center text-gray-400 text-xs md:text-sm">No seats selected yet.</p>
             ) : (
               selectedSeats.map((seat, index) => (
                 <div
                   key={`${seat.row}-${seat.seat}`}
-                  className="flex justify-between items-center p-2 sm:p-3 bg-gray-800/50 rounded-lg my-2 transition-transform hover:translate-x-2 border border-cyan-500/30"
+                  className="flex justify-between items-center p-2 md:p-3 bg-gray-800/50 rounded-lg my-2 transition-transform hover:translate-x-2 border border-cyan-500/30"
                 >
-                  <span className="text-xs sm:text-sm text-gray-200">{`Row ${seat.row} - Seat ${seat.seat} (₹${seat.price})`}</span>
+                  <span className="text-xs md:text-sm text-gray-200">{`Row ${seat.row} - Seat ${seat.seat} (₹${seat.price})`}</span>
                   <button
                     onClick={() => handleRemoveSeat(index)}
-                    className="bg-transparent border-none text-cyan-400 text-xs sm:text-sm font-semibold cursor-pointer hover:text-cyan-300 transition-colors"
+                    className="bg-transparent border-none text-cyan-400 text-xs md:text-sm font-semibold cursor-pointer hover:text-cyan-300 transition-colors"
                   >
                     Remove
                   </button>
@@ -164,11 +162,11 @@ const Booking = () => {
           </div>
           <button
             onClick={handlePurchase}
-            className="w-4/5 py-2 sm:py-3 bg-cyan-700 text-gray-100 rounded-lg text-sm sm:text-base font-semibold cursor-pointer shadow-md hover:bg-cyan-600 hover:-translate-y-1 hover:brightness-125 transition-all disabled:bg-gray-500 disabled:cursor-not-allowed disabled:shadow-none disabled:brightness-100"
+            className="w-4/5 py-2 md:py-3 bg-cyan-700 text-gray-100 rounded-lg text-sm md:text-base font-semibold cursor-pointer shadow-md hover:bg-cyan-600 hover:-translate-y-1 hover:brightness-125 transition-all disabled:bg-gray-500 disabled:cursor-not-allowed disabled:shadow-none disabled:brightness-100"
           >
             Purchase (₹{calculateTotalPrice()})
           </button>
-          {error && <p className="text-cyan-300 font-medium mt-3 text-xs sm:text-sm">{error}</p>}
+          {error && <p className="text-cyan-300 font-medium mt-3 text-xs md:text-sm">{error}</p>}
         </div>
       </div>
 
@@ -182,7 +180,7 @@ const Booking = () => {
               {Array.from({ length: 3 }).map((_, rowIndex) => {
                 const rowLabel = String.fromCharCode(68 + rowIndex); // D to F
                 const seatsPerRow = rowLabel === "D" ? 26 : 24;
-                const splitPoint = rowLabel === "D" ? 13 : 12; // Split at 13 for D, 12 for E and F
+                const splitPoint = rowLabel === "D" ? 13 : 12;
 
                 return (
                   <div key={rowLabel} className="flex items-center mb-4 w-full max-w-3xl sm:max-w-4xl justify-center">
@@ -216,7 +214,7 @@ const Booking = () => {
                         );
                       })}
                     </div>
-                    <div className="w-8 sm:w-12 md:w-16"></div> {/* Adjusted gap */}
+                    <div className="w-8 sm:w-12 md:w-16"></div>
                     <div className="flex gap-1 sm:gap-2">
                       {Array.from({ length: seatsPerRow - splitPoint }).map((_, seatIndex) => {
                         const seatNumber = splitPoint + seatIndex + 1;
@@ -255,7 +253,7 @@ const Booking = () => {
               {Array.from({ length: 7 }).map((_, rowIndex) => {
                 const rowLabel = String.fromCharCode(71 + rowIndex); // G to M
                 const seatsPerRow = 24;
-                const splitPoint = 12; // Split at 12
+                const splitPoint = 12;
 
                 return (
                   <div key={rowLabel} className="flex items-center mb-4 w-full max-w-3xl sm:max-w-4xl justify-center">
@@ -289,7 +287,7 @@ const Booking = () => {
                         );
                       })}
                     </div>
-                    <div className="w-8 sm:w-12 md:w-16"></div> {/* Adjusted gap */}
+                    <div className="w-8 sm:w-12 md:w-16"></div>
                     <div className="flex gap-1 sm:gap-2">
                       {Array.from({ length: seatsPerRow - splitPoint }).map((_, seatIndex) => {
                         const seatNumber = splitPoint + seatIndex + 1;
@@ -328,7 +326,7 @@ const Booking = () => {
               {Array.from({ length: 3 }).map((_, rowIndex) => {
                 const rowLabel = String.fromCharCode(78 + rowIndex); // N to P
                 const seatsPerRow = 22;
-                const splitPoint = 11; // Split at 11
+                const splitPoint = 11;
 
                 return (
                   <div key={rowLabel} className="flex items-center mb-4 w-full max-w-3xl sm:max-w-4xl justify-center">
@@ -362,7 +360,7 @@ const Booking = () => {
                         );
                       })}
                     </div>
-                    <div className="w-8 sm:w-12 md:w-16"></div> {/* Adjusted gap */}
+                    <div className="w-8 sm:w-12 md:w-16"></div>
                     <div className="flex gap-1 sm:gap-2">
                       {Array.from({ length: seatsPerRow - splitPoint }).map((_, seatIndex) => {
                         const seatNumber = splitPoint + seatIndex + 1;
