@@ -47,18 +47,22 @@ const SeatSelectionPopup = ({ onConfirm, movieTitle }) => {
   const displayTitle = movieTitle || "Unknown Movie";
 
   return (
-    <div
-      className="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-lg"
-      style={{
-        backgroundImage: `url(${backgroundUrl || "https://placehold.co/1920x1080?text=Loading..."})`,
-        backgroundSize: "cover", // Use "cover" to fill the screen, or "contain" to avoid stretching
-        backgroundPosition: "center", // Center the image
-        backgroundRepeat: "no-repeat", // Prevent tiling
-        filter: "brightness(0.5)", // Darken the image (adjust value between 0 and 1)
-      }}
-    >
-      {/* Overlay for additional darkening and contrast */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-md"></div>
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      {/* Background Image Layer */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `url(${backgroundUrl || "https://placehold.co/1920x1080?text=Loading..."})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          filter: "brightness(0.5) blur(8px)", // Apply brightness and blur only to the image
+          boxShadow: "inset 0 0 20px rgba(0, 0, 0, 0.8)", // Optional inner shadow for effect
+        }}
+      ></div>
+
+      {/* Overlay for additional darkening */}
+      <div className="absolute inset-0 bg-black/60"></div>
 
       {/* Content */}
       <div className="relative bg-gray-900/80 rounded-xl p-8 w-11/12 max-w-lg shadow-2xl border border-cyan-500/30 backdrop-blur-sm z-10">
@@ -132,7 +136,7 @@ const SeatSelectionPopup = ({ onConfirm, movieTitle }) => {
         </div>
         <button
           onClick={handleConfirm}
-          className="w-full py-3 bg-cyan-700 text-gray-100 rounded-lg font-semibold text-base hover:shadow-lg hover:-translate-y-1 hover:bg-cyan-600 transition-all shadow-md"
+          className="w-full py-3 bg-cyan-500 text-gray-100 rounded-lg font-semibold text-base hover:shadow-lg hover:-translate-y-1 hover:bg-cyan-600 transition-all shadow-md"
         >
           Select Seats
         </button>
