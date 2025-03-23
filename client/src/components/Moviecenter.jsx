@@ -54,12 +54,12 @@ const Moviecenter = ({ movies }) => {
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url(${movies[currentIndex % movies.length].background})`,
       }}
     >
-      <main className="flex flex-col items-center justify-end h-full relative z-10 pb-1">
-        <div className="relative w-full h-[350px] flex items-center overflow-hidden lg:h-[350px] md:h-[300px] sm:h-[250px]">
+      <main className="flex flex-col items-center justify-end h-full relative z-10 pb-2">
+        <div className="relative w-full h-[400px] lg:h-[350px] md:h-[300px] sm:h-[250px] flex items-center overflow-hidden">
           <button
-            className={`absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/60 text-white border-none p-3 rounded-full transition-all duration-300 z-20 ${
+            className={`absolute left-2 lg:left-4 top-1/2 transform -translate-y-1/2 bg-black/60 text-white border-none p-2 lg:p-3 rounded-full transition-all duration-300 z-20 ${
               currentIndex === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-cyan-700 hover:scale-110"
-            } lg:p-3 md:p-2 sm:p-[6px]`}
+            }`}
             onClick={currentIndex === 0 ? null : handlePrevClick}
             disabled={currentIndex === 0}
             aria-label="Previous Movie"
@@ -75,7 +75,7 @@ const Moviecenter = ({ movies }) => {
           >
             {infiniteMovies.map((movie, index) => (
               <div
-                className={`flex-shrink-0 mx-[30px] flex items-center justify-center w-[180px] transition-all duration-300 lg:mx-[30px] md:mx-4 sm:mx-[10px] lg:w-[180px] md:w-[150px] sm:w-[120px] ${
+                className={`flex-shrink-0 mx-2 sm:mx-4 lg:mx-[30px] flex items-center justify-center w-[120px] sm:w-[150px] lg:w-[180px] transition-all duration-300 ${
                   index % movies.length === currentIndex % movies.length ? "scale-110" : "scale-95 opacity-80"
                 }`}
                 key={index}
@@ -87,13 +87,13 @@ const Moviecenter = ({ movies }) => {
                 <div className="relative text-center rounded-lg border border-cyan-500/30">
                   <Link
                     to={`/booking/${encodeURIComponent(movie.title.replace(/ /g, "%20"))}`}
-                    state={{ posterUrl: movie.imageUrl }} // Pass imageUrl as posterUrl in state
+                    state={{ posterUrl: movie.imageUrl }}
                     className="block text-white no-underline"
                   >
                     <img
                       src={movie.imageUrl}
                       alt={movie.title}
-                      className={`w-[180px] h-[270px] object-cover rounded-lg transition-all duration-300 lg:w-[180px] lg:h-[270px] md:w-[150px] md:h-[225px] sm:w-[120px] sm:h-[180px] ${
+                      className={`w-[120px] h-[180px] sm:w-[150px] sm:h-[225px] lg:w-[180px] lg:h-[270px] object-cover rounded-lg transition-all duration-300 ${
                         index % movies.length === currentIndex % movies.length
                           ? ""
                           : "hover:scale-110 hover:brightness-110"
@@ -102,14 +102,14 @@ const Moviecenter = ({ movies }) => {
                       onError={(e) => (e.target.src = "https://via.placeholder.com/180x270?text=No+Image")}
                     />
                   </Link>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black/70 opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer gap-4">
-                    <div className="text-gray-200 text-lg font-semibold text-center px-3 bg-gradient-to-r from-cyan-400 to-lime-400 bg-clip-text text-transparent lg:text-lg md:text-base sm:text-sm">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black/70 opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer gap-2 sm:gap-3 lg:gap-4">
+                    <div className="text-gray-200 text-sm sm:text-base lg:text-lg font-semibold text-center px-2 sm:px-3 bg-gradient-to-r from-cyan-400 to-lime-400 bg-clip-text text-transparent line-clamp-2">
                       {movie.title}
                     </div>
                     <Link
                       to={`/booking/${encodeURIComponent(movie.title.replace(/ /g, "%20"))}`}
-                      state={{ posterUrl: movie.imageUrl }} // Pass imageUrl as posterUrl in state
-                      className="mt-2 px-6 py-2 text-base font-medium bg-cyan-700 text-gray-100 rounded-full hover:brightness-125 hover:scale-110 transition-all duration-300 lg:text-base md:text-sm sm:text-sm"
+                      state={{ posterUrl: movie.imageUrl }}
+                      className="mt-1 sm:mt-2 px-4 sm:px-6 py-1 sm:py-2 text-xs sm:text-sm lg:text-base font-medium bg-cyan-700 text-gray-100 rounded-full hover:brightness-125 hover:scale-110 transition-all duration-300"
                     >
                       Book Now
                     </Link>
@@ -119,7 +119,7 @@ const Moviecenter = ({ movies }) => {
             ))}
           </div>
           <button
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/60 text-white border-none p-3 rounded-full cursor-pointer hover:bg-cyan-700 hover:scale-110 transition-all duration-300 z-20 lg:p-3 md:p-2 sm:p-[6px]"
+            className="absolute right-2 lg:right-4 top-1/2 transform -translate-y-1/2 bg-black/60 text-white border-none p-2 lg:p-3 rounded-full cursor-pointer hover:bg-cyan-700 hover:scale-110 transition-all duration-300 z-20"
             onClick={handleNextClick}
             aria-label="Next Movie"
           >

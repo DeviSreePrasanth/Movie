@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { FaFilm } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { GoPerson } from "react-icons/go";
 
 const Header = () => {
   const [searchFocused, setSearchFocused] = useState(false);
@@ -119,7 +118,6 @@ const Header = () => {
             </button>
           </div>
 
-          {/* Mobile Navigation Links */}
           <Link
             to="/home"
             className="block py-3 px-4 text-lg font-medium hover:bg-gray-800 hover:text-cyan-500 rounded-md transition-all duration-300"
@@ -171,11 +169,6 @@ const Header = () => {
             >
               <BiSearch className="w-5 h-5" />
             </button>
-          </div>
-
-          {/* Profile */}
-          <div className="hidden md:block">
-            <GoPerson className="text-3xl text-white hover:text-cyan-500 transition-colors duration-300" />
           </div>
         </div>
       </div>
