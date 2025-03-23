@@ -7,7 +7,6 @@ import AboutUs from "./components/AboutUs";
 import Footer from "./components/Footer";
 import Booking from "./components/Booking";
 import Payment from "./components/Payment";
-import Profile from "./components/Profile";
 import SeatSelection from "./components/SeatSelectionPopup";
 import moviesData from "./components/movie.json";
 
@@ -59,7 +58,6 @@ function App() {
           />
           <Route path="/booking/:movieTitle" element={<Booking />} />
           <Route path="/payment" element={<Payment />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/seat-selection" element={<SeatSelection />} />
         </Routes>
       </div>
