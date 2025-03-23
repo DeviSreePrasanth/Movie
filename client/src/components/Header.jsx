@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { FaFilm } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { CgProfile } from "react-icons/cg";
+import { GoPerson } from "react-icons/go";
 
 const Header = () => {
   const [searchFocused, setSearchFocused] = useState(false);
@@ -18,8 +18,8 @@ const Header = () => {
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
-          <FaFilm className="w-8 h-8 text-red-500 animate-pulse" />
-          <span className="text-2xl font-bold tracking-tight text-white hover:text-red-500 transition-colors duration-300">
+          <FaFilm className="w-8 h-8 text-cyan-500 animate-pulse" /> {/* Changed to cyan */}
+          <span className="text-2xl font-bold tracking-tight text-white hover:text-cyan-500 transition-colors duration-300">
             CineVerse
           </span>
         </Link>
@@ -56,37 +56,37 @@ const Header = () => {
           <li>
             <Link
               to="/home"
-              className="relative text-white px-3 py-1 rounded-md hover:text-red-500 hover:bg-gray-800/50 transition-all duration-300 group"
+              className="relative text-white px-3 py-1 rounded-md hover:text-cyan-500 hover:bg-gray-800/50 transition-all duration-300 group"
             >
               Home
-              <span className="absolute inset-x-0 bottom-0 h-0.5 bg-red-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></span>
+              <span className="absolute inset-x-0 bottom-0 h-0.5 bg-cyan-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></span>
             </Link>
           </li>
           <li>
             <Link
               to="/movies"
-              className="relative text-white px-3 py-1 rounded-md hover:text-red-500 hover:bg-gray-800/50 transition-all duration-300 group"
+              className="relative text-white px-3 py-1 rounded-md hover:text-cyan-500 hover:bg-gray-800/50 transition-all duration-300 group"
             >
               Movies
-              <span className="absolute inset-x-0 bottom-0 h-0.5 bg-red-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></span>
+              <span className="absolute inset-x-0 bottom-0 h-0.5 bg-cyan-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></span>
             </Link>
           </li>
           <li>
             <Link
               to="/about"
-              className="relative text-white px-3 py-1 rounded-md hover:text-red-500 hover:bg-gray-800/50 transition-all duration-300 group"
+              className="relative text-white px-3 py-1 rounded-md hover:text-cyan-500 hover:bg-gray-800/50 transition-all duration-300 group"
             >
               About
-              <span className="absolute inset-x-0 bottom-0 h-0.5 bg-red-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></span>
+              <span className="absolute inset-x-0 bottom-0 h-0.5 bg-cyan-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></span>
             </Link>
           </li>
           <li>
             <Link
               to="/history"
-              className="relative text-white px-3 py-1 rounded-md hover:text-red-500 hover:bg-gray-800/50 transition-all duration-300 group"
+              className="relative text-white px-3 py-1 rounded-md hover:text-cyan-500 hover:bg-gray-800/50 transition-all duration-300 group"
             >
               Payment History
-              <span className="absolute inset-x-0 bottom-0 h-0.5 bg-red-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></span>
+              <span className="absolute inset-x-0 bottom-0 h-0.5 bg-cyan-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></span>
             </Link>
           </li>
         </ul>
@@ -99,28 +99,28 @@ const Header = () => {
         >
           <Link
             to="/home"
-            className="block py-3 px-4 text-lg font-medium hover:bg-gray-800 hover:text-red-500 rounded-md transition-all duration-300"
+            className="block py-3 px-4 text-lg font-medium hover:bg-gray-800 hover:text-cyan-500 rounded-md transition-all duration-300"
             onClick={toggleMobileMenu}
           >
             Home
           </Link>
           <Link
             to="/movies"
-            className="block py-3 px-4 text-lg font-medium hover:bg-gray-800 hover:text-red-500 rounded-md transition-all duration-300"
+            className="block py-3 px-4 text-lg font-medium hover:bg-gray-800 hover:text-cyan-500 rounded-md transition-all duration-300"
             onClick={toggleMobileMenu}
           >
             Movies
           </Link>
           <Link
             to="/about"
-            className="block py-3 px-4 text-lg font-medium hover:bg-gray-800 hover:text-red-500 rounded-md transition-all duration-300"
+            className="block py-3 px-4 text-lg font-medium hover:bg-gray-800 hover:text-cyan-500 rounded-md transition-all duration-300"
             onClick={toggleMobileMenu}
           >
             About
           </Link>
           <Link
             to="/history"
-            className="block py-3 px-4 text-lg font-medium hover:bg-gray-800 hover:text-red-500 rounded-md transition-all duration-300"
+            className="block py-3 px-4 text-lg font-medium hover:bg-gray-800 hover:text-cyan-500 rounded-md transition-all duration-300"
             onClick={toggleMobileMenu}
           >
             Payment History
@@ -144,7 +144,7 @@ const Header = () => {
             />
             <button
               type="button"
-              className="text-gray-300 hover:text-red-500 transition-colors duration-300 p-1"
+              className="text-gray-300 hover:text-cyan-500 transition-colors duration-300 p-1"
             >
               <BiSearch className="w-5 h-5" />
             </button>
@@ -152,7 +152,7 @@ const Header = () => {
 
           {/* Profile */}
           <div className="hidden md:block">
-            <CgProfile className="text-3xl"/>
+            <GoPerson className="text-3xl text-white hover:text-cyan-500 transition-colors duration-300" />
           </div>
         </div>
       </div>
