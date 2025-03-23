@@ -120,7 +120,7 @@ function Layout({ children }) {
   const location = useLocation();
   const isLoginPage = location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/login';
   const isBookingPage = location.pathname.startsWith('/booking');
-
+     
   return (
     <>
       {!isLoginPage && !isBookingPage && <Header />}
