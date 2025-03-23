@@ -38,8 +38,8 @@ function App() {
     loadMovies();
   }, []);
 
-  if (loading) return <div className="text-white text-center">Loading movies...</div>;
-  if (error) return <div className="text-red-500 text-center">{error}</div>;
+  if (loading) return <div className="text-cyan text-center">Loading movies...</div>;
+  if (error) return <div className="text-cyan-500 text-center">{error}</div>;
 
   return (
     <Router>
