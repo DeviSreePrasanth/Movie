@@ -8,6 +8,7 @@ const Moviecenter = () => {
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [autoSlideEnabled, setAutoSlideEnabled] = useState(false); // Control auto-slide
 
   useEffect(() => {
     const loadMovies = () => {
@@ -31,27 +32,29 @@ const Moviecenter = () => {
     loadMovies();
   }, []);
 
-  // Auto-slide functionality (hidden control)
+  // Auto-slide functionality (only when enabled)
   useEffect(() => {
-    if (movies.length > 0) {
+    if (autoSlideEnabled && movies.length > 0) {
       const interval = setInterval(() => {
         setIsTransitioning(true);
         setCurrentIndex((prevIndex) => prevIndex + 1);
-      }, 1500); // Auto-slide every 4 seconds
+      }, 1500); // Auto-slide every 1.5 seconds
       return () => clearInterval(interval);
     }
-  }, [movies.length]);
+  }, [autoSlideEnabled, movies.length]);
 
   const infiniteMovies = [...movies, ...movies];
 
   const handlePrevClick = () => {
     setIsTransitioning(true);
     setCurrentIndex((prevIndex) => prevIndex - 1);
+    setAutoSlideEnabled(false); // Stop auto-slide on "Previous" click
   };
 
   const handleNextClick = () => {
     setIsTransitioning(true);
     setCurrentIndex((prevIndex) => prevIndex + 1);
+    setAutoSlideEnabled(true); // Enable auto-slide on "Next" click
   };
 
   const handleMovieClick = (index) => {
@@ -81,12 +84,15 @@ const Moviecenter = () => {
         transition: "background-image 0.5s ease-in-out",
       }}
     >
-      <main className="flex flex-col items-center justify-end h-full relative z-10 pb-2">
+      <main className="flex flex-col items-center justify-end h-full relative z-10 pb-1">
         <div className="relative w-full h-[350px] flex items-center overflow-hidden">
           {/* Previous Button */}
           <button
-            className="absolute top-4 left-4 bg-black/60 text-white border-none p-3 rounded-full cursor-pointer hover:bg-red-500 hover:scale-110 transition-all duration-300 z-20"
-            onClick={handlePrevClick}
+            className={`absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/60 text-white border-none p-3 rounded-full transition-all duration-300 z-20 ${
+              currentIndex === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-red-500 hover:scale-110"
+            }`}
+            onClick={currentIndex === 0 ? null : handlePrevClick} // Disable click handler when on first card
+            disabled={currentIndex === 0} // Disable button
             aria-label="Previous Movie"
           >
             ❮
@@ -119,7 +125,7 @@ const Moviecenter = () => {
                       alt={movie.title}
                       className={`w-[180px] h-[270px] object-cover rounded-lg border transition-all duration-300 ${
                         index % movies.length === currentIndex % movies.length
-                          ? "shadow-glow" // Replaced border-red-500 with glow
+                          ? "shadow-glow"
                           : "border-gray-500 hover:scale-105 hover:animate-zoom-in"
                       }`}
                       loading="lazy"
@@ -136,7 +142,7 @@ const Moviecenter = () => {
 
           {/* Next Button */}
           <button
-            className="absolute top-4 right-4 bg-black/60 text-white border-none p-3 rounded-full cursor-pointer hover:bg-red-500 hover:scale-110 transition-all duration-300 z-20"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/60 text-white border-none p-3 rounded-full cursor-pointer hover:bg-red-500 hover:scale-110 transition-all duration-300 z-20"
             onClick={handleNextClick}
             aria-label="Next Movie"
           >
@@ -160,9 +166,6 @@ const Moviecenter = () => {
           .text-lg {
             font-size: 1rem;
           }
-          .top-4 {
-            top: 12px;
-          }
           .p-3 {
             padding: 8px 12px;
           }
@@ -183,9 +186,6 @@ const Moviecenter = () => {
           }
           .text-lg {
             font-size: 0.875rem;
-          }
-          .top-4 {
-            top: 8px;
           }
           .p-3 {
             padding: 6px 10px;
