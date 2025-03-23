@@ -85,13 +85,17 @@ const Moviecenter = ({ movies }) => {
                 onKeyPress={(e) => e.key === "Enter" && handleMovieClick(index % movies.length)}
               >
                 <div className="relative text-center rounded-lg border border-cyan-500/30">
-                  <Link to={`/booking/${encodeURIComponent(movie.title.replace(/ /g, "%20"))}`} className="block text-white no-underline">
+                  <Link
+                    to={`/booking/${encodeURIComponent(movie.title.replace(/ /g, "%20"))}`}
+                    state={{ posterUrl: movie.imageUrl }} // Pass imageUrl as posterUrl in state
+                    className="block text-white no-underline"
+                  >
                     <img
                       src={movie.imageUrl}
                       alt={movie.title}
                       className={`w-[180px] h-[270px] object-cover rounded-lg transition-all duration-300 lg:w-[180px] lg:h-[270px] md:w-[150px] md:h-[225px] sm:w-[120px] sm:h-[180px] ${
                         index % movies.length === currentIndex % movies.length
-                          ? "" // Removed shadow-glow
+                          ? ""
                           : "hover:scale-110 hover:brightness-110"
                       }`}
                       loading="lazy"
@@ -104,6 +108,7 @@ const Moviecenter = ({ movies }) => {
                     </div>
                     <Link
                       to={`/booking/${encodeURIComponent(movie.title.replace(/ /g, "%20"))}`}
+                      state={{ posterUrl: movie.imageUrl }} // Pass imageUrl as posterUrl in state
                       className="mt-2 px-6 py-2 text-base font-medium bg-cyan-700 text-gray-100 rounded-full hover:brightness-125 hover:scale-110 transition-all duration-300 lg:text-base md:text-sm sm:text-sm"
                     >
                       Book Now
@@ -137,7 +142,6 @@ const Moviecenter = ({ movies }) => {
         .animate-zoom-in {
           animation: zoomIn 0.3s ease-out forwards;
         }
-        /* Removed .shadow-glow definition */
       `}</style>
     </div>
   );
