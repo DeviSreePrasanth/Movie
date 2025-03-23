@@ -1,38 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { fetchMovies } from "../services/api"; // Adjust path as needed
+import { useLocation } from "react-router-dom";
 
 const SeatSelectionPopup = ({ onConfirm, movieTitle }) => {
   const today = new Date().toISOString().split("T")[0];
-
   const [numSeats, setNumSeats] = useState(2);
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedTime, setSelectedTime] = useState("8:40");
   const [backgroundUrl, setBackgroundUrl] = useState(null);
 
-  useEffect(() => {
-    const getMovieBackground = async () => {
-      try {
-        console.log("Fetching movies for:", movieTitle);
-        const movies = await fetchMovies("now_playing");
-        console.log("Fetched movies:", movies.map((m) => m.title));
-        const movie = movies.find(
-          (m) => m.title.toLowerCase() === movieTitle.toLowerCase()
-        );
-        console.log("Matched movie:", movie);
-        const bgUrl =
-          movie?.background || "https://via.placeholder.com/1920x1080?text=No+Image";
-        console.log("Setting background URL:", bgUrl);
-        setBackgroundUrl(bgUrl);
-      } catch (err) {
-        console.error("Error fetching movie background:", err);
-        setBackgroundUrl("https://via.placeholder.com/1920x1080?text=Error+Loading+Image");
-      }
-    };
+  const location = useLocation();
 
-    if (movieTitle) {
-      getMovieBackground();
+  useEffect(() => {
+    const posterUrl = location.state?.posterUrl;
+    if (posterUrl) {
+      console.log("Using poster URL from location state:", posterUrl);
+      setBackgroundUrl(posterUrl);
+    } else {
+      console.warn("No poster URL found in location state, using fallback.");
+      setBackgroundUrl("https://placehold.co/1920x1080?text=No+Image");
     }
-  }, [movieTitle]);
+  }, [location.state]);
 
   const getDynamicDates = () => {
     const today = new Date();
@@ -61,14 +48,20 @@ const SeatSelectionPopup = ({ onConfirm, movieTitle }) => {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-md"
+      className="fixed inset-0 flex items-center justify-center z-50 bg-black/80 backdrop-blur-lg"
       style={{
-        backgroundImage: `url(${backgroundUrl || "https://via.placeholder.com/1920x1080?text=Loading..."})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundImage: `url(${backgroundUrl || "https://placehold.co/1920x1080?text=Loading..."})`,
+        backgroundSize: "cover", // Use "cover" to fill the screen, or "contain" to avoid stretching
+        backgroundPosition: "center", // Center the image
+        backgroundRepeat: "no-repeat", // Prevent tiling
+        filter: "brightness(0.5)", // Darken the image (adjust value between 0 and 1)
       }}
     >
-      <div className="bg-gray-900/80 rounded-xl p-8 w-11/12 max-w-lg shadow-2xl border border-cyan-500/30 backdrop-blur-sm">
+      {/* Overlay for additional darkening and contrast */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-md"></div>
+
+      {/* Content */}
+      <div className="relative bg-gray-900/80 rounded-xl p-8 w-11/12 max-w-lg shadow-2xl border border-cyan-500/30 backdrop-blur-sm z-10">
         <h2 className="text-2xl font-bold text-gray-200 mb-6 text-center">
           Book Tickets for <span className="text-cyan-400">{displayTitle}</span>
         </h2>
