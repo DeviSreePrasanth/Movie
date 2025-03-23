@@ -97,10 +97,16 @@ const Moviecenter = ({ movies }) => {
                       loading="lazy"
                     />
                   </Link>
-                  <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/60 opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black/60 opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
                     <div className="text-white text-lg font-semibold text-center px-3 lg:text-lg md:text-base sm:text-sm">
                       {movie.title}
                     </div>
+                    <Link
+                      to={`/booking/${encodeURIComponent(movie.title.replace(/ /g, "%20"))}`}
+                      className="mt-2 bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition-all duration-300 lg:py-2 lg:px-4 md:py-1 md:px-3 sm:py-1 sm:px-2"
+                    >
+                      Book Now
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -115,7 +121,6 @@ const Moviecenter = ({ movies }) => {
           </button>
         </div>
       </main>
-      {/* Tailwind Animation Keyframes */}
       <style jsx>{`
         @keyframes bounceSubtle {
           0%, 100% { transform: translateY(0); }
