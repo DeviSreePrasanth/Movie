@@ -1,44 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import moviesData from "./movie.json"; // Adjust path as needed
 
-const Moviecenter = () => {
-  const [movies, setMovies] = useState([]);
+const Moviecenter = ({ movies }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [autoSlideEnabled, setAutoSlideEnabled] = useState(false); // Control auto-slide
+  const [autoSlideEnabled, setAutoSlideEnabled] = useState(false);
 
-  useEffect(() => {
-    const loadMovies = () => {
-      setLoading(true);
-      try {
-        const formattedMovies = moviesData.movies.map((movie) => ({
-          title: movie.title,
-          imageUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-          background: `https://image.tmdb.org/t/p/original${movie.backdrop_path}`,
-        }));
-        if (formattedMovies.length > 0) {
-          setMovies(formattedMovies);
-        } else {
-          setError("No movies found in the data.");
-        }
-      } catch (err) {
-        setError("Failed to load movies from JSON.");
-      }
-      setLoading(false);
-    };
-    loadMovies();
-  }, []);
-
-  // Auto-slide functionality (only when enabled)
   useEffect(() => {
     if (autoSlideEnabled && movies.length > 0) {
       const interval = setInterval(() => {
         setIsTransitioning(true);
         setCurrentIndex((prevIndex) => prevIndex + 1);
-      }, 1500); // Auto-slide every 1.5 seconds
+      }, 1500);
       return () => clearInterval(interval);
     }
   }, [autoSlideEnabled, movies.length]);
@@ -48,13 +21,13 @@ const Moviecenter = () => {
   const handlePrevClick = () => {
     setIsTransitioning(true);
     setCurrentIndex((prevIndex) => prevIndex - 1);
-    setAutoSlideEnabled(false); // Stop auto-slide on "Previous" click
+    setAutoSlideEnabled(false);
   };
 
   const handleNextClick = () => {
     setIsTransitioning(true);
     setCurrentIndex((prevIndex) => prevIndex + 1);
-    setAutoSlideEnabled(true); // Enable auto-slide on "Next" click
+    setAutoSlideEnabled(true);
   };
 
   const handleMovieClick = (index) => {
@@ -72,13 +45,11 @@ const Moviecenter = () => {
     }
   };
 
-  if (loading) return <div className="text-white text-center">Loading movies...</div>;
-  if (error) return <div className="text-red-500 text-center">{error}</div>;
   if (movies.length === 0) return <div className="text-white text-center">No movies available.</div>;
 
   return (
     <div
-      className="fixed inset-0 w-screen h-screen overflow-hidden bg-cover bg-center bg-no-repeat font-poppins"
+      className="w-full h-screen bg-cover bg-center bg-no-repeat font-poppins"
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url(${movies[currentIndex % movies.length].background})`,
         transition: "background-image 0.5s ease-in-out",
@@ -86,19 +57,16 @@ const Moviecenter = () => {
     >
       <main className="flex flex-col items-center justify-end h-full relative z-10 pb-1">
         <div className="relative w-full h-[350px] flex items-center overflow-hidden">
-          {/* Previous Button */}
           <button
             className={`absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/60 text-white border-none p-3 rounded-full transition-all duration-300 z-20 ${
               currentIndex === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-red-500 hover:scale-110"
             }`}
-            onClick={currentIndex === 0 ? null : handlePrevClick} // Disable click handler when on first card
-            disabled={currentIndex === 0} // Disable button
+            onClick={currentIndex === 0 ? null : handlePrevClick}
+            disabled={currentIndex === 0}
             aria-label="Previous Movie"
           >
             ❮
           </button>
-
-          {/* Slider */}
           <div
             className={`flex h-full items-center ${isTransitioning ? "transition-transform duration-500 ease-in-out animate-bounce-subtle" : ""}`}
             style={{ transform: `translateX(-${currentIndex * (180 + 60)}px)` }}
@@ -131,7 +99,6 @@ const Moviecenter = () => {
                       loading="lazy"
                     />
                   </Link>
-                  {/* Hover Title Overlay */}
                   <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/60 opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
                     <div className="text-white text-lg font-semibold text-center px-3">{movie.title}</div>
                   </div>
@@ -139,8 +106,6 @@ const Moviecenter = () => {
               </div>
             ))}
           </div>
-
-          {/* Next Button */}
           <button
             className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/60 text-white border-none p-3 rounded-full cursor-pointer hover:bg-red-500 hover:scale-110 transition-all duration-300 z-20"
             onClick={handleNextClick}
@@ -150,8 +115,6 @@ const Moviecenter = () => {
           </button>
         </div>
       </main>
-
-      {/* Responsive Styles and Custom Animations */}
       <style jsx>{`
         @media (max-width: 1024px) {
           .h-[350px] {
@@ -191,7 +154,6 @@ const Moviecenter = () => {
             padding: 6px 10px;
           }
         }
-
         @keyframes slideIn {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
