@@ -4,13 +4,10 @@ import { motion } from "framer-motion";
 
 const AboutUs = () => {
   return (
-    <div className="font-poppins text-gray-200 bg-gradient-to-br from-black via-gray-900 to-gray-800 min-h-screen overflow-hidden relative p-10 max-w-7xl mx-auto">
-      {/* Background Overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,255,255,0.1)_0%,rgba(0,0,0,0.9)_80%)] z-0"></div>
-
+    <div className="p-10 max-w-7xl mx-auto">
       {/* Hero Section */}
       <motion.section
-        className="text-center mb-16 relative z-10"
+        className="text-center mb-16"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
@@ -25,7 +22,7 @@ const AboutUs = () => {
 
       {/* Our Story Section */}
       <motion.section
-        className="mb-16 relative z-10"
+        className="mb-16"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
@@ -52,7 +49,7 @@ const AboutUs = () => {
 
       {/* Quick Facts Section */}
       <motion.section
-        className="mb-16 relative z-10"
+        className="mb-16"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
@@ -84,7 +81,7 @@ const AboutUs = () => {
 
       {/* Mission Section */}
       <motion.section
-        className="mb-16 relative z-10"
+        className="mb-16"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
@@ -97,7 +94,7 @@ const AboutUs = () => {
 
       {/* Join Us Section */}
       <motion.section
-        className="text-center mb-16 relative z-10"
+        className="text-center mb-16"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
