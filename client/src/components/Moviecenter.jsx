@@ -58,7 +58,7 @@ const Moviecenter = ({ movies }) => {
         <div className="relative w-full h-[350px] flex items-center overflow-hidden lg:h-[350px] md:h-[300px] sm:h-[250px]">
           <button
             className={`absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/60 text-white border-none p-3 rounded-full transition-all duration-300 z-20 ${
-              currentIndex === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-red-500 hover:scale-110"
+              currentIndex === 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-cyan-700 hover:scale-110"
             } lg:p-3 md:p-2 sm:p-[6px]`}
             onClick={currentIndex === 0 ? null : handlePrevClick}
             disabled={currentIndex === 0}
@@ -84,26 +84,27 @@ const Moviecenter = ({ movies }) => {
                 tabIndex={0}
                 onKeyPress={(e) => e.key === "Enter" && handleMovieClick(index % movies.length)}
               >
-                <div className="relative text-center rounded-lg shadow-md overflow-hidden hover:shadow-xl">
+                <div className="relative text-center rounded-lg border border-cyan-500/30">
                   <Link to={`/booking/${encodeURIComponent(movie.title.replace(/ /g, "%20"))}`} className="block text-white no-underline">
                     <img
                       src={movie.imageUrl}
                       alt={movie.title}
-                      className={`w-[180px] h-[270px] object-cover rounded-lg border transition-all duration-300 lg:w-[180px] lg:h-[270px] md:w-[150px] md:h-[225px] sm:w-[120px] sm:h-[180px] ${
+                      className={`w-[180px] h-[270px] object-cover rounded-lg transition-all duration-300 lg:w-[180px] lg:h-[270px] md:w-[150px] md:h-[225px] sm:w-[120px] sm:h-[180px] ${
                         index % movies.length === currentIndex % movies.length
-                          ? "shadow-glow"
-                          : "border-gray-500 hover:scale-105 hover:animate-zoom-in"
+                          ? "" // Removed shadow-glow
+                          : "hover:scale-110 hover:brightness-110"
                       }`}
                       loading="lazy"
+                      onError={(e) => (e.target.src = "https://via.placeholder.com/180x270?text=No+Image")}
                     />
                   </Link>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black/60 opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
-                    <div className="text-white text-lg font-semibold text-center px-3 lg:text-lg md:text-base sm:text-sm">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black/70 opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer gap-4">
+                    <div className="text-gray-200 text-lg font-semibold text-center px-3 bg-gradient-to-r from-cyan-400 to-lime-400 bg-clip-text text-transparent lg:text-lg md:text-base sm:text-sm">
                       {movie.title}
                     </div>
                     <Link
                       to={`/booking/${encodeURIComponent(movie.title.replace(/ /g, "%20"))}`}
-                      className="mt-2 bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition-all duration-300 lg:py-2 lg:px-4 md:py-1 md:px-3 sm:py-1 sm:px-2"
+                      className="mt-2 px-6 py-2 text-base font-medium bg-cyan-700 text-gray-100 rounded-full hover:brightness-125 hover:scale-110 transition-all duration-300 lg:text-base md:text-sm sm:text-sm"
                     >
                       Book Now
                     </Link>
@@ -113,7 +114,7 @@ const Moviecenter = ({ movies }) => {
             ))}
           </div>
           <button
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/60 text-white border-none p-3 rounded-full cursor-pointer hover:bg-red-500 hover:scale-110 transition-all duration-300 z-20 lg:p-3 md:p-2 sm:p-[6px]"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/60 text-white border-none p-3 rounded-full cursor-pointer hover:bg-cyan-700 hover:scale-110 transition-all duration-300 z-20 lg:p-3 md:p-2 sm:p-[6px]"
             onClick={handleNextClick}
             aria-label="Next Movie"
           >
@@ -136,9 +137,7 @@ const Moviecenter = ({ movies }) => {
         .animate-zoom-in {
           animation: zoomIn 0.3s ease-out forwards;
         }
-        .shadow-glow {
-          box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-        }
+        /* Removed .shadow-glow definition */
       `}</style>
     </div>
   );
