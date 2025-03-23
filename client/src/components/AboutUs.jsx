@@ -34,17 +34,26 @@ const AboutUs = () => {
           It all began with a simple goal: make booking movie tickets super easy. Now, we’re happy to help tons of movie fans every day. From a tiny start, we’ve grown into a name people trust for their movie fun.
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <motion.div className="text-center p-4 sm:p-6 bg-gray-900/50 border border-cyan-500/20 rounded-xl backdrop-blur-md hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all" whileHover={{ scale: 1.05 }}>
-            <h3 className="text-xl sm:text-2xl font-semibold text-cyan-400 mb-2">50 Million+</h3>
-            <p className="text-sm sm:text-base text-gray-400">App Users</p>
+          <motion.div 
+            className="text-center p-3 sm:p-4 lg:p-4 bg-gray-900/50 border border-cyan-500/20 rounded-xl backdrop-blur-md hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all" 
+            whileHover={{ scale: 1.05 }}
+          >
+            <h3 className="text-base sm:text-lg lg:text-lg font-semibold text-cyan-400 mb-1">50 Million+</h3>
+            <p className="text-xs sm:text-sm lg:text-xs text-gray-400">App Users</p>
           </motion.div>
-          <motion.div className="text-center p-4 sm:p-6 bg-gray-900/50 border border-cyan-500/20 rounded-xl backdrop-blur-md hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all" whileHover={{ scale: 1.05 }}>
-            <h3 className="text-xl sm:text-2xl font-semibold text-cyan-400 mb-2">15 Million+</h3>
-            <p className="text-sm sm:text-base text-gray-400">Tickets Sold Monthly</p>
+          <motion.div 
+            className="text-center p-3 sm:p-4 lg:p-4 bg-gray-900/50 border border-cyan-500/20 rounded-xl backdrop-blur-md hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all" 
+            whileHover={{ scale: 1.05 }}
+          >
+            <h3 className="text-base sm:text-lg lg:text-lg font-semibold text-cyan-400 mb-1">15 Million+</h3>
+            <p className="text-xs sm:text-sm lg:text-xs text-gray-400">Tickets Sold Monthly</p>
           </motion.div>
-          <motion.div className="text-center p-4 sm:p-6 bg-gray-900/50 border border-cyan-500/20 rounded-xl backdrop-blur-md hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all col-span-2 sm:col-span-1" whileHover={{ scale: 1.05 }}>
-            <h3 className="text-xl sm:text-2xl font-semibold text-cyan-400 mb-2">2 Billion+</h3>
-            <p className="text-sm sm:text-base text-gray-400">Page Visits Monthly</p>
+          <motion.div 
+            className="text-center p-3 sm:p-4 lg:p-4 bg-gray-900/50 border border-cyan-500/20 rounded-xl backdrop-blur-md hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all col-span-2 sm:col-span-1" 
+            whileHover={{ scale: 1.05 }}
+          >
+            <h3 className="text-base sm:text-lg lg:text-lg font-semibold text-cyan-400 mb-1">2 Billion+</h3>
+            <p className="text-xs sm:text-sm lg:text-xs text-gray-400">Page Visits Monthly</p>
           </motion.div>
         </div>
       </motion.section>
@@ -60,25 +69,37 @@ const AboutUs = () => {
           Fun Facts
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <motion.div className="text-center p-4 sm:p-6 bg-gray-900/50 border border-cyan-500/20 rounded-xl backdrop-blur-md hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all" whileHover={{ scale: 1.05 }}>
-            <FaUsers size={40} className="text-cyan-400 mb-4 mx-auto sm:size-60" />
-            <h3 className="text-xl sm:text-2xl font-semibold text-cyan-400 mb-2">30 Million+</h3>
-            <p className="text-sm sm:text-base text-gray-400">Happy Users</p>
+          <motion.div 
+            className="text-center p-3 sm:p-4 lg:p-4 bg-gray-900/50 border border-cyan-500/20 rounded-xl backdrop-blur-md hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all" 
+            whileHover={{ scale: 1.05 }}
+          >
+            <FaUsers size={25} className="text-cyan-400 mb-2 mx-auto sm:size-40 lg:size-30" />
+            <h3 className="text-base sm:text-lg lg:text-lg font-semibold text-cyan-400 mb-1">30 Million+</h3>
+            <p className="text-xs sm:text-sm lg:text-xs text-gray-400">Happy Users</p>
           </motion.div>
-          <motion.div className="text-center p-4 sm:p-6 bg-gray-900/50 border border-cyan-500/20 rounded-xl backdrop-blur-md hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all" whileHover={{ scale: 1.05 }}>
-            <FaGlobe size={40} className="text-cyan-400 mb-4 mx-auto sm:size-60" />
-            <h3 className="text-xl sm:text-2xl font-semibold text-cyan-400 mb-2">5</h3>
-            <p className="text-sm sm:text-base text-gray-400">Countries</p>
+          <motion.div 
+            className="text-center p-3 sm:p-4 lg:p-4 bg-gray-900/50 border border-cyan-500/20 rounded-xl backdrop-blur-md hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all" 
+            whileHover={{ scale: 1.05 }}
+          >
+            <FaGlobe size={25} className="text-cyan-400 mb-2 mx-auto sm:size-40 lg:size-30" />
+            <h3 className="text-base sm:text-lg lg:text-lg font-semibold text-cyan-400 mb-1">5</h3>
+            <p className="text-xs sm:text-sm lg:text-xs text-gray-400">Countries</p>
           </motion.div>
-          <motion.div className="text-center p-4 sm:p-6 bg-gray-900/50 border border-cyan-500/20 rounded-xl backdrop-blur-md hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all" whileHover={{ scale: 1.05 }}>
-            <FaLandmark size={40} className="text-cyan-400 mb-4 mx-auto sm:size-60" />
-            <h3 className="text-xl sm:text-2xl font-semibold text-cyan-400 mb-2">650+</h3>
-            <p className="text-sm sm:text-base text-gray-400">Towns and Cities</p>
+          <motion.div 
+            className="text-center p-3 sm:p-4 lg:p-4 bg-gray-900/50 border border-cyan-500/20 rounded-xl backdrop-blur-md hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all" 
+            whileHover={{ scale: 1.05 }}
+          >
+            <FaLandmark size={25} className="text-cyan-400 mb-2 mx-auto sm:size-40 lg:size-30" />
+            <h3 className="text-base sm:text-lg lg:text-lg font-semibold text-cyan-400 mb-1">650+</h3>
+            <p className="text-xs sm:text-sm lg:text-xs text-gray-400">Towns and Cities</p>
           </motion.div>
-          <motion.div className="text-center p-4 sm:p-6 bg-gray-900/50 border border-cyan-500/20 rounded-xl backdrop-blur-md hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all" whileHover={{ scale: 1.05 }}>
-            <FaFilm size={40} className="text-cyan-400 mb-4 mx-auto sm:size-60" />
-            <h3 className="text-xl sm:text-2xl font-semibold text-cyan-400 mb-2">5000+</h3>
-            <p className="text-sm sm:text-base text-gray-400">Screens</p>
+          <motion.div 
+            className="text-center p-3 sm:p-4 lg:p-4 bg-gray-900/50 border border-cyan-500/20 rounded-xl backdrop-blur-md hover:shadow-xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all" 
+            whileHover={{ scale: 1.05 }}
+          >
+            <FaFilm size={25} className="text-cyan-400 mb-2 mx-auto sm:size-40 lg:size-30" />
+            <h3 className="text-base sm:text-lg lg:text-lg font-semibold text-cyan-400 mb-1">5000+</h3>
+            <p className="text-xs sm:text-sm lg:text-xs text-gray-400">Screens</p>
           </motion.div>
         </div>
       </motion.section>
