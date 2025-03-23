@@ -61,6 +61,24 @@ function App() {
                 </div>
               }
             />
+          <Route
+  path="/home"
+  element={
+    <div className="flex flex-col">
+      <Header />
+      <div id="movie-center">
+        <Moviecenter movies={movies} />
+      </div>
+      <div id="movie-section">
+        <Moviesection movies={movies} />
+      </div>
+      <div id="about-us">
+        <AboutUs />
+      </div>
+      <Footer />
+    </div>
+  }
+/>
             <Route path="/booking/:movieTitle" element={<Booking />} />
             <Route path="/payment" element={<Payment />} />
             <Route path="/seat-selection" element={<SeatSelection />} />
