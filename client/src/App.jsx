@@ -38,30 +38,36 @@ function App() {
     loadMovies();
   }, []);
 
-  if (loading) return <div className="text-cyan text-center">Loading movies...</div>;
+  if (loading) return <div className="text-cyan-500 text-center">Loading movies...</div>;
   if (error) return <div className="text-cyan-500 text-center">{error}</div>;
 
   return (
     <Router>
-      <div className="min-h-screen bg-gray-900 flex flex-col">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <div className="flex flex-col">
-                <Header />
-                <Moviecenter movies={movies} />
-                <Moviesection movies={movies}  />
-                <AboutUs />
-                <Footer />
-              </div>
-            }
-          />
-          <Route path="/booking/:movieTitle" element={<Booking />} />
-          <Route path="/payment" element={<Payment />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/seat-selection" element={<SeatSelection />} />
-        </Routes>
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 text-gray-200 font-poppins flex flex-col relative overflow-hidden">
+        {/* Background Overlay */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,255,255,0.1)_0%,rgba(0,0,0,0.9)_30%)] z-0"></div>
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col flex-grow">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <div className="flex flex-col">
+                  <Header />
+                  <Moviecenter movies={movies} />
+                  <Moviesection movies={movies} />
+                  <AboutUs />
+                  <Footer />
+                </div>
+              }
+            />
+            <Route path="/booking/:movieTitle" element={<Booking />} />
+            <Route path="/payment" element={<Payment />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/seat-selection" element={<SeatSelection />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );

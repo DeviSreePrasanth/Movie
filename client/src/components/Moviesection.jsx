@@ -39,7 +39,7 @@ function MovieSection() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-black via-gray-900 to-gray-800 py-6">
+    <div className="py-6">
       {LANGUAGES.map((lang) => (
         <div key={lang.code} className="mb-8">
           <h2 className="text-3xl md:text-4xl font-semibold mb-4 ml-6 bg-gradient-to-r from-cyan-400 to-lime-400 bg-clip-text text-transparent drop-shadow-md">
@@ -53,7 +53,7 @@ function MovieSection() {
               >
                 <Link
                   to={`/booking/${encodeURIComponent(movie.title.replace(/ /g, "%20"))}`}
-                  state={{ posterUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }} // Pass poster URL in state
+                  state={{ posterUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }}
                   className="block"
                 >
                   <img
@@ -69,7 +69,7 @@ function MovieSection() {
                   </div>
                   <Link
                     to={`/booking/${encodeURIComponent(movie.title.replace(/ /g, "%20"))}`}
-                    state={{ posterUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }} // Pass poster URL in state
+                    state={{ posterUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }}
                     className="px-6 py-2 text-base font-medium bg-cyan-700 text-gray-100 rounded-full hover:brightness-125 hover:scale-110 transition-all duration-300 lg:text-base md:text-sm sm:text-sm"
                   >
                     Book Now

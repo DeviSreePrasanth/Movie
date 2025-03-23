@@ -54,6 +54,7 @@ const Moviecenter = ({ movies }) => {
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url(${movies[currentIndex % movies.length].background})`,
       }}
     >
+      
       <main className="flex flex-col items-center justify-end h-full relative z-10 pb-1">
         <div className="relative w-full h-[350px] flex items-center overflow-hidden lg:h-[350px] md:h-[300px] sm:h-[250px]">
           <button

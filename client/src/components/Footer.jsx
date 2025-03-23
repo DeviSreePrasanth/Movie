@@ -4,9 +4,10 @@ import { motion } from 'framer-motion';
 
 const Footer = () => {
   return (
-    <footer className="relative bg-gradient-to-br from-gray-900 to-black text-gray-200 py-8 px-4 md:px-6 lg:px-8 overflow-hidden font-poppins">
+    <footer className="relative bg-black text-gray-200 py-8 px-4 md:px-6 lg:px-8 overflow-hidden font-poppins">
       {/* Background overlay */}
       <div className="absolute inset-0 bg-gradient-radial from-white/10 to-black/80 z-0"></div>
+      <div className="absolute inset-0  z-0"></div>
 
       {/* Footer content */}
       <div className="relative max-w-7xl mx-auto flex flex-wrap justify-between gap-6 z-10">
