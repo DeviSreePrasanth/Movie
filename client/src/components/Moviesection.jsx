@@ -35,21 +35,21 @@ function MovieSection() {
   }, []);
 
   if (loading) {
-    return <div className="text-center text-gray-300 text-xl py-8">Loading...</div>;
+    return <div className="text-center text-gray-300 text-base sm:text-xl py-6 sm:py-8">Loading...</div>;
   }
 
   return (
-    <div className="py-6">
+    <div className="py-4 sm:py-6">
       {LANGUAGES.map((lang) => (
-        <div key={lang.code} className="mb-8">
-          <h2 className="text-3xl md:text-4xl font-semibold mb-4 ml-6 bg-gradient-to-r from-cyan-400 to-lime-400 bg-clip-text text-transparent drop-shadow-md">
+        <div key={lang.code} className="mb-6 sm:mb-8">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-3 sm:mb-4 ml-4 sm:ml-6 bg-gradient-to-r from-cyan-400 to-lime-400 bg-clip-text text-transparent drop-shadow-md">
             {lang.name}
           </h2>
-          <div className="flex gap-6 overflow-x-auto p-4 snap-x snap-mandatory scroll-smooth scrollbar-none">
+          <div className="flex gap-4 sm:gap-6 overflow-x-auto p-2 sm:p-4 snap-x snap-mandatory scroll-smooth scrollbar-none">
             {moviesByLanguage[lang.code]?.map((movie) => (
               <div
                 key={movie.id}
-                className="flex-none w-56 h-[360px] relative text-center bg-gray-900/70 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] snap-center border border-cyan-500/30 backdrop-blur-sm"
+                className="flex-none w-40 sm:w-56 h-[260px] sm:h-[360px] relative text-center bg-gray-900/70 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] snap-center border border-cyan-500/30 backdrop-blur-sm"
               >
                 <Link
                   to={`/booking/${encodeURIComponent(movie.title.replace(/ /g, "%20"))}`}
@@ -63,14 +63,14 @@ function MovieSection() {
                     loading="lazy"
                   />
                 </Link>
-                <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-black/70 opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer gap-4">
-                  <div className="text-gray-200 text-xl font-semibold text-center px-4 bg-gradient-to-r from-cyan-400 to-lime-400 bg-clip-text text-transparent lg:text-xl md:text-lg sm:text-base">
+                <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-black/70 opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer gap-2 sm:gap-4">
+                  <div className="text-gray-200 text-sm sm:text-xl font-semibold text-center px-2 sm:px-4 bg-gradient-to-r from-cyan-400 to-lime-400 bg-clip-text text-transparent sm:text-xl md:text-lg">
                     {movie.title}
                   </div>
                   <Link
                     to={`/booking/${encodeURIComponent(movie.title.replace(/ /g, "%20"))}`}
                     state={{ posterUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }}
-                    className="px-6 py-2 text-base font-medium bg-cyan-700 text-gray-100 rounded-full hover:brightness-125 hover:scale-110 transition-all duration-300 lg:text-base md:text-sm sm:text-sm"
+                    className="px-4 sm:px-6 py-1 sm:py-2 text-sm sm:text-base font-medium bg-cyan-700 text-gray-100 rounded-full hover:brightness-125 hover:scale-110 transition-all duration-300 md:text-sm"
                   >
                     Book Now
                   </Link>
