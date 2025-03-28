@@ -129,6 +129,21 @@ const Booking = () => {
 
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 text-gray-200 font-poppins flex flex-col md:flex-row overflow-x-hidden">
+      {/* Internal CSS */}
+      <style>
+        {`
+          /* Hide default scrollbar but keep functionality */
+          .no-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+          }
+
+          .no-scrollbar::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, and Opera */
+          }
+        `}
+      </style>
+
       {/* Booking Details (Sidebar on Desktop, Below on Mobile) */}
       <div className="w-full md:w-80 relative md:order-first order-last">
         <div className="md:absolute inset-0 bg-black/75 p-4 md:p-6 flex flex-col items-center justify-start backdrop-blur-md">
@@ -171,226 +186,234 @@ const Booking = () => {
       </div>
 
       {/* Theater Seating Layout */}
-      <div className="flex-1 p-4 sm:p-6 md:p-10 text-center bg-gray-900/20 overflow-y-auto h-screen scrollbar-thin scrollbar-thumb-cyan-500 scrollbar-track-gray-800">
-        <div className="flex justify-center">
-          <div className="flex-1">
-            {/* Recliners Section (Rows D-F) */}
-            <h4 className="text-base sm:text-lg md:text-xl font-semibold mb-4 text-cyan-400">Recliners (₹299)</h4>
-            <div className="flex flex-col items-center mb-8">
-              {Array.from({ length: 3 }).map((_, rowIndex) => {
-                const rowLabel = String.fromCharCode(68 + rowIndex); // D to F
-                const seatsPerRow = rowLabel === "D" ? 26 : 24;
-                const splitPoint = rowLabel === "D" ? 13 : 12;
+      <div className="flex-1 p-4 sm:p-6 md:p-10 text-center bg-gray-900/20 overflow-y-auto h-screen">
+        <div className="flex justify-start">
+          <div className="w-full">
+            <div className="overflow-x-auto no-scrollbar min-w-[720px]">
+              {/* Recliners Section (Rows D-F) */}
+              <h4 className="text-base sm:text-lg md:text-xl font-semibold mb-4 text-cyan-400">Recliners (₹299)</h4>
+              <div className="flex flex-col items-start mb-8">
+                {Array.from({ length: 3 }).map((_, rowIndex) => {
+                  const rowLabel = String.fromCharCode(68 + rowIndex); // D to F
+                  const seatsPerRow = rowLabel === "D" ? 24 : 24;
+                  const splitPoint = rowLabel === "D" ? 12 : 12;
 
-                return (
-                  <div key={rowLabel} className="flex items-center mb-4 w-full max-w-3xl sm:max-w-4xl justify-center">
-                    <span className="w-6 sm:w-8 text-gray-200 font-semibold mr-2 flex items-center justify-center text-xs sm:text-sm">
-                      {rowLabel}
-                    </span>
-                    <div className="flex gap-1 sm:gap-2">
-                      {Array.from({ length: splitPoint }).map((_, seatIndex) => {
-                        const seatNumber = seatIndex + 1;
-                        const isBooked = bookedSeats.some(
-                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
-                        );
-                        const isSelected = selectedSeats.some(
-                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
-                        );
+                  return (
+                    <div key={rowLabel} className="flex items-center mb-3 w-full">
+                      <span className="w-10 text-gray-200 font-semibold mr-3 flex items-center justify-center text-sm">
+                        {rowLabel}
+                      </span>
+                      <div className="flex gap-2">
+                        <div className="flex gap-2">
+                          {Array.from({ length: splitPoint }).map((_, seatIndex) => {
+                            const seatNumber = seatIndex + 1;
+                            const isBooked = bookedSeats.some(
+                              (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                            );
+                            const isSelected = selectedSeats.some(
+                              (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                            );
 
-                        return (
-                          <div
-                            key={seatNumber}
-                            className={`w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 flex justify-center items-center border border-gray-600 rounded-lg text-xs sm:text-sm transition-all ${
-                              isBooked
-                                ? "bg-gray-400 cursor-not-allowed opacity-70"
-                                : isSelected
-                                ? "bg-cyan-500 border-cyan-500"
-                                : "bg-transparent cursor-pointer hover:bg-cyan-400 hover:border-cyan-400 hover:text-black"
-                            }`}
-                            onClick={() => !isBooked && handleSeatSelection(rowLabel, seatNumber, 299)}
-                          >
-                            {seatNumber}
-                          </div>
-                        );
-                      })}
+                            return (
+                              <div
+                                key={seatNumber}
+                                className={`w-8 h-8 md:w-10 md:h-10 flex justify-center items-center border border-gray-600 rounded-lg text-xs md:text-sm transition-all ${
+                                  isBooked
+                                    ? "bg-gray-400 cursor-not-allowed opacity-70"
+                                    : isSelected
+                                    ? "bg-cyan-500 border-cyan-500"
+                                    : "bg-transparent cursor-pointer hover:bg-cyan-400 hover:border-cyan-400 hover:text-black"
+                                }`}
+                                onClick={() => !isBooked && handleSeatSelection(rowLabel, seatNumber, 299)}
+                              >
+                                {seatNumber}
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div className="w-10"></div>
+                        <div className="flex gap-2">
+                          {Array.from({ length: seatsPerRow - splitPoint }).map((_, seatIndex) => {
+                            const seatNumber = splitPoint + seatIndex + 1;
+                            const isBooked = bookedSeats.some(
+                              (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                            );
+                            const isSelected = selectedSeats.some(
+                              (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                            );
+
+                            return (
+                              <div
+                                key={seatNumber}
+                                className={`w-8 h-8 md:w-10 md:h-10 flex justify-center items-center border border-gray-600 rounded-lg text-xs md:text-sm transition-all ${
+                                  isBooked
+                                    ? "bg-gray-400 cursor-not-allowed opacity-70"
+                                    : isSelected
+                                    ? "bg-cyan-500 border-cyan-500"
+                                    : "bg-transparent cursor-pointer hover:bg-cyan-400 hover:border-cyan-400 hover:text-black"
+                                }`}
+                                onClick={() => !isBooked && handleSeatSelection(rowLabel, seatNumber, 299)}
+                              >
+                                {seatNumber}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </div>
-                    <div className="w-8 sm:w-12 md:w-16"></div>
-                    <div className="flex gap-1 sm:gap-2">
-                      {Array.from({ length: seatsPerRow - splitPoint }).map((_, seatIndex) => {
-                        const seatNumber = splitPoint + seatIndex + 1;
-                        const isBooked = bookedSeats.some(
-                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
-                        );
-                        const isSelected = selectedSeats.some(
-                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
-                        );
+                  );
+                })}
+              </div>
 
-                        return (
-                          <div
-                            key={seatNumber}
-                            className={`w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 flex justify-center items-center border border-gray-600 rounded-lg text-xs sm:text-sm transition-all ${
-                              isBooked
-                                ? "bg-gray-400 cursor-not-allowed opacity-70"
-                                : isSelected
-                                ? "bg-cyan-500 border-cyan-500"
-                                : "bg-transparent cursor-pointer hover:bg-cyan-400 hover:border-cyan-400 hover:text-black"
-                            }`}
-                            onClick={() => !isBooked && handleSeatSelection(rowLabel, seatNumber, 299)}
-                          >
-                            {seatNumber}
-                          </div>
-                        );
-                      })}
+              {/* Premium Section (Rows G-M) */}
+              <h4 className="text-base sm:text-lg md:text-xl font-semibold mb-4 text-cyan-400">Premium (₹199)</h4>
+              <div className="flex flex-col items-start mb-8">
+                {Array.from({ length: 7 }).map((_, rowIndex) => {
+                  const rowLabel = String.fromCharCode(71 + rowIndex); // G to M
+                  const seatsPerRow = 24;
+                  const splitPoint = 12;
+
+                  return (
+                    <div key={rowLabel} className="flex items-center mb-3 w-full">
+                      <span className="w-10 text-gray-200 font-semibold mr-3 flex items-center justify-center text-sm">
+                        {rowLabel}
+                      </span>
+                      <div className="flex gap-2">
+                        <div className="flex gap-2">
+                          {Array.from({ length: splitPoint }).map((_, seatIndex) => {
+                            const seatNumber = seatIndex + 1;
+                            const isBooked = bookedSeats.some(
+                              (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                            );
+                            const isSelected = selectedSeats.some(
+                              (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                            );
+
+                            return (
+                              <div
+                                key={seatNumber}
+                                className={`w-8 h-8 md:w-10 md:h-10 flex justify-center items-center border border-gray-600 rounded-lg text-xs md:text-sm transition-all ${
+                                  isBooked
+                                    ? "bg-gray-400 cursor-not-allowed opacity-70"
+                                    : isSelected
+                                    ? "bg-cyan-500 border-cyan-500"
+                                    : "bg-transparent cursor-pointer hover:bg-cyan-400 hover:border-cyan-400 hover:text-black"
+                                }`}
+                                onClick={() => !isBooked && handleSeatSelection(rowLabel, seatNumber, 199)}
+                              >
+                                {seatNumber}
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div className="w-10"></div>
+                        <div className="flex gap-2">
+                          {Array.from({ length: seatsPerRow - splitPoint }).map((_, seatIndex) => {
+                            const seatNumber = splitPoint + seatIndex + 1;
+                            const isBooked = bookedSeats.some(
+                              (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                            );
+                            const isSelected = selectedSeats.some(
+                              (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                            );
+
+                            return (
+                              <div
+                                key={seatNumber}
+                                className={`w-8 h-8 md:w-10 md:h-10 flex justify-center items-center border border-gray-600 rounded-lg text-xs md:text-sm transition-all ${
+                                  isBooked
+                                    ? "bg-gray-400 cursor-not-allowed opacity-70"
+                                    : isSelected
+                                    ? "bg-cyan-500 border-cyan-500"
+                                    : "bg-transparent cursor-pointer hover:bg-cyan-400 hover:border-cyan-400 hover:text-black"
+                                }`}
+                                onClick={() => !isBooked && handleSeatSelection(rowLabel, seatNumber, 199)}
+                              >
+                                {seatNumber}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
 
-            {/* Premium Section (Rows G-M) */}
-            <h4 className="text-base sm:text-lg md:text-xl font-semibold mb-4 text-cyan-400">Premium (₹199)</h4>
-            <div className="flex flex-col items-center mb-8">
-              {Array.from({ length: 7 }).map((_, rowIndex) => {
-                const rowLabel = String.fromCharCode(71 + rowIndex); // G to M
-                const seatsPerRow = 24;
-                const splitPoint = 12;
+              {/* Non-Premium Section (Rows N-P) */}
+              <h4 className="text-base sm:text-lg md:text-xl font-semibold mb-4 text-cyan-400">Non-Premium (₹149)</h4>
+              <div className="flex flex-col items-start mb-8">
+                {Array.from({ length: 3 }).map((_, rowIndex) => {
+                  const rowLabel = String.fromCharCode(78 + rowIndex); // N to P
+                  const seatsPerRow = 24;
+                  const splitPoint = 12;
 
-                return (
-                  <div key={rowLabel} className="flex items-center mb-4 w-full max-w-3xl sm:max-w-4xl justify-center">
-                    <span className="w-6 sm:w-8 text-gray-200 font-semibold mr-2 flex items-center justify-center text-xs sm:text-sm">
-                      {rowLabel}
-                    </span>
-                    <div className="flex gap-1 sm:gap-2">
-                      {Array.from({ length: splitPoint }).map((_, seatIndex) => {
-                        const seatNumber = seatIndex + 1;
-                        const isBooked = bookedSeats.some(
-                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
-                        );
-                        const isSelected = selectedSeats.some(
-                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
-                        );
+                  return (
+                    <div key={rowLabel} className="flex items-center mb-3 w-full">
+                      <span className="w-10 text-gray-200 font-semibold mr-3 flex items-center justify-center text-sm">
+                        {rowLabel}
+                      </span>
+                      <div className="flex gap-2">
+                        <div className="flex gap-2">
+                          {Array.from({ length: splitPoint }).map((_, seatIndex) => {
+                            const seatNumber = seatIndex + 1;
+                            const isBooked = bookedSeats.some(
+                              (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                            );
+                            const isSelected = selectedSeats.some(
+                              (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                            );
 
-                        return (
-                          <div
-                            key={seatNumber}
-                            className={`w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 flex justify-center items-center border border-gray-600 rounded-lg text-xs sm:text-sm transition-all ${
-                              isBooked
-                                ? "bg-gray-400 cursor-not-allowed opacity-70"
-                                : isSelected
-                                ? "bg-cyan-500 border-cyan-500"
-                                : "bg-transparent cursor-pointer hover:bg-cyan-400 hover:border-cyan-400 hover:text-black"
-                            }`}
-                            onClick={() => !isBooked && handleSeatSelection(rowLabel, seatNumber, 199)}
-                          >
-                            {seatNumber}
-                          </div>
-                        );
-                      })}
+                            return (
+                              <div
+                                key={seatNumber}
+                                className={`w-8 h-8 md:w-10 md:h-10 flex justify-center items-center border border-gray-600 rounded-lg text-xs md:text-sm transition-all ${
+                                  isBooked
+                                    ? "bg-gray-400 cursor-not-allowed opacity-70"
+                                    : isSelected
+                                    ? "bg-cyan-500 border-cyan-500"
+                                    : "bg-transparent cursor-pointer hover:bg-cyan-400 hover:border-cyan-400 hover:text-black"
+                                }`}
+                                onClick={() => !isBooked && handleSeatSelection(rowLabel, seatNumber, 149)}
+                              >
+                                {seatNumber}
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div className="w-10"></div>
+                        <div className="flex gap-2">
+                          {Array.from({ length: seatsPerRow - splitPoint }).map((_, seatIndex) => {
+                            const seatNumber = splitPoint + seatIndex + 1;
+                            const isBooked = bookedSeats.some(
+                              (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                            );
+                            const isSelected = selectedSeats.some(
+                              (seat) => seat.row === rowLabel && seat.seat === seatNumber
+                            );
+
+                            return (
+                              <div
+                                key={seatNumber}
+                                className={`w-8 h-8 md:w-10 md:h-10 flex justify-center items-center border border-gray-600 rounded-lg text-xs md:text-sm transition-all ${
+                                  isBooked
+                                    ? "bg-gray-400 cursor-not-allowed opacity-70"
+                                    : isSelected
+                                    ? "bg-cyan-500 border-cyan-500"
+                                    : "bg-transparent cursor-pointer hover:bg-cyan-400 hover:border-cyan-400 hover:text-black"
+                                }`}
+                                onClick={() => !isBooked && handleSeatSelection(rowLabel, seatNumber, 149)}
+                              >
+                                {seatNumber}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </div>
-                    <div className="w-8 sm:w-12 md:w-16"></div>
-                    <div className="flex gap-1 sm:gap-2">
-                      {Array.from({ length: seatsPerRow - splitPoint }).map((_, seatIndex) => {
-                        const seatNumber = splitPoint + seatIndex + 1;
-                        const isBooked = bookedSeats.some(
-                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
-                        );
-                        const isSelected = selectedSeats.some(
-                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
-                        );
-
-                        return (
-                          <div
-                            key={seatNumber}
-                            className={`w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 flex justify-center items-center border border-gray-600 rounded-lg text-xs sm:text-sm transition-all ${
-                              isBooked
-                                ? "bg-gray-400 cursor-not-allowed opacity-70"
-                                : isSelected
-                                ? "bg-cyan-500 border-cyan-500"
-                                : "bg-transparent cursor-pointer hover:bg-cyan-400 hover:border-cyan-400 hover:text-black"
-                            }`}
-                            onClick={() => !isBooked && handleSeatSelection(rowLabel, seatNumber, 199)}
-                          >
-                            {seatNumber}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Non-Premium Section (Rows N-P) */}
-            <h4 className="text-base sm:text-lg md:text-xl font-semibold mb-4 text-cyan-400">Non-Premium (₹149)</h4>
-            <div className="flex flex-col items-center mb-8">
-              {Array.from({ length: 3 }).map((_, rowIndex) => {
-                const rowLabel = String.fromCharCode(78 + rowIndex); // N to P
-                const seatsPerRow = 22;
-                const splitPoint = 11;
-
-                return (
-                  <div key={rowLabel} className="flex items-center mb-4 w-full max-w-3xl sm:max-w-4xl justify-center">
-                    <span className="w-6 sm:w-8 text-gray-200 font-semibold mr-2 flex items-center justify-center text-xs sm:text-sm">
-                      {rowLabel}
-                    </span>
-                    <div className="flex gap-1 sm:gap-2">
-                      {Array.from({ length: splitPoint }).map((_, seatIndex) => {
-                        const seatNumber = seatIndex + 1;
-                        const isBooked = bookedSeats.some(
-                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
-                        );
-                        const isSelected = selectedSeats.some(
-                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
-                        );
-
-                        return (
-                          <div
-                            key={seatNumber}
-                            className={`w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 flex justify-center items-center border border-gray-600 rounded-lg text-xs sm:text-sm transition-all ${
-                              isBooked
-                                ? "bg-gray-400 cursor-not-allowed opacity-70"
-                                : isSelected
-                                ? "bg-cyan-500 border-cyan-500"
-                                : "bg-transparent cursor-pointer hover:bg-cyan-400 hover:border-cyan-400 hover:text-black"
-                            }`}
-                            onClick={() => !isBooked && handleSeatSelection(rowLabel, seatNumber, 149)}
-                          >
-                            {seatNumber}
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <div className="w-8 sm:w-12 md:w-16"></div>
-                    <div className="flex gap-1 sm:gap-2">
-                      {Array.from({ length: seatsPerRow - splitPoint }).map((_, seatIndex) => {
-                        const seatNumber = splitPoint + seatIndex + 1;
-                        const isBooked = bookedSeats.some(
-                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
-                        );
-                        const isSelected = selectedSeats.some(
-                          (seat) => seat.row === rowLabel && seat.seat === seatNumber
-                        );
-
-                        return (
-                          <div
-                            key={seatNumber}
-                            className={`w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 flex justify-center items-center border border-gray-600 rounded-lg text-xs sm:text-sm transition-all ${
-                              isBooked
-                                ? "bg-gray-400 cursor-not-allowed opacity-70"
-                                : isSelected
-                                ? "bg-cyan-500 border-cyan-500"
-                                : "bg-transparent cursor-pointer hover:bg-cyan-400 hover:border-cyan-400 hover:text-black"
-                            }`}
-                            onClick={() => !isBooked && handleSeatSelection(rowLabel, seatNumber, 149)}
-                          >
-                            {seatNumber}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
 
             {/* Enhanced Screen */}
