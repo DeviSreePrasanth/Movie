@@ -7,7 +7,7 @@ const LANGUAGES = [
   { code: "hi", name: "Hindi Movies" },
   { code: "en", name: "English Movies" },
 ];
-
+ 
 function MovieSection() {
   const [moviesByLanguage, setMoviesByLanguage] = useState({});
   const [loading, setLoading] = useState(true);
